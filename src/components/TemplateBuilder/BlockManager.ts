@@ -1,72 +1,214 @@
 export function addCustomBlocks(editor: any) {
   const customBlocks = [
-        {
-          id: "custom-header",
-          label: "Header",
-          category: "Custom",
-          content: `<header style="display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid #ddd;">
-                      <img src="https://via.placeholder.com/100" style="height:50px"/>
-                      <div>
-                        <h2>{{companyName}}</h2>
-                        <div>
-                        <p>{{address}} </p> <p> {{email}} </p> <p> {{phone}}</p>
-                        </div>
-                      </div>
-                    </header>`,
+    {
+      id: "custom-header",
+      label: "Header",
+      category: "Custom",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "header",
+            attributes: {
+              style:
+                "display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid #ddd;",
+            },
+            components: [
+              {
+                tagName: "img",
+                attributes: {
+                  src: "https://via.placeholder.com/100",
+                  style: "height:50px",
+                },
+              },
+              {
+                tagName: "div",
+                components: [
+                  {
+                    tagName: "h2",
+                    content: "{{companyName}}",
+                  },
+                  {
+                    tagName: "div",
+                    components: [
+                      { tagName: "p", content: "{{address}}" },
+                      { tagName: "p", content: "{{email}}" },
+                      { tagName: "p", content: "{{phone}}" },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      id: "custom-footer",
+      label: "Footer",
+      category: "Custom",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "footer",
+            attributes: {
+              style:
+                "text-align:center;padding:20px;border-top:1px solid #ddd;",
+            },
+            content:
+              "© {{year}} {{companyName}} Pvt Ltd. All rights reserved.",
+          },
+        ],
+      },
+    },
+    {
+      id: "custom-table",
+      label: "Table",
+      category: "Custom",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "table",
+            attributes: {
+              style:
+                "width:100%;border-collapse:collapse;text-align:center;",
+            },
+            components: [
+              {
+                tagName: "tr",
+                components: [
+                  {
+                    tagName: "td",
+                    attributes: {
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Col 1",
+                  },
+                  {
+                    tagName: "td",
+                    attributes: {
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Col 2",
+                  },
+                  {
+                    tagName: "td",
+                    attributes: {
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Col 3",
+                  },
+                  {
+                    tagName: "td",
+                    attributes: {
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Col 4",
+                  },
+                ],
+              },
+              {
+                tagName: "tr",
+                components: [
+                  {
+                    tagName: "td",
+                    attributes: {
+                      colspan: "2",
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Merged",
+                  },
+                  {
+                    tagName: "td",
+                    attributes: {
+                      colspan: "2",
+                      style: "border:1px solid #000;padding:8px;",
+                    },
+                    content: "Merged",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      id: "text-block",
+      label: "Text",
+      category: "Basic",
+      content: {
+        type: "text",
+        content: "Editable text here",
+      },
+    },
+    {
+      id: "image-block",
+      label: "Image",
+      category: "Basic",
+      content: {
+        type: "image",
+        attributes: {
+          src: "https://via.placeholder.com/200",
+          alt: "image",
         },
-        {
-          id: "custom-footer",
-          label: "Footer",
-          category: "Custom",
-          content: `<footer style="text-align:center;padding:20px;border-top:1px solid #ddd;">
-                      © {{year}} {{companyName}} Pvt Ltd. All rights reserved.
-                    </footer>`,
-        },
-        {
-          id: "custom-table",
-          label: "Table",
-          category: "Custom",
-          content: `<table style="width:100%;border-collapse:collapse;text-align:center;">
-                      <tr>
-                        <td style="border:1px solid #000;padding:8px;"><span>Col 1</span></td>
-                        <td style="border:1px solid #000;padding:8px;"><span>Col 2</span></td>
-                        <td style="border:1px solid #000;padding:8px;"><span>Col 3</span></td>
-                        <td style="border:1px solid #000;padding:8px;"><span>Col 4</span></td>
-                      </tr>
-                      <tr>
-                        <td style="border:1px solid #000;padding:8px;" colspan="2"><span>Merged</span></td>
-                        <td style="border:1px solid #000;padding:8px;" colspan="2"><span>Merged</span></td>
-                      </tr>
-                    </table>`,
-        },
-        {
-          id: "text-block",
-          label: "Text",
-          category: "Basic",
-          content: `<div contenteditable="true">Editable text here</div>`,
-        },
-        {
-          id: "image-block",
-          label: "Image",
-          category: "Basic",
-          content: `<img src="https://via.placeholder.com/200" alt="image" />`,
-        },
-        {
-          id: "button-block",
-          label: "Button",
-          category: "Basic",
-          content: `<button style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;">Click Me</button>`,
-        },
-        {
-          id: "row-col",
-          label: "Row/Column",
-          category: "Layout",
-          content: `<div style="display:flex;gap:10px;">
-                      <div style="flex:1;border:1px dashed #ccc;padding:10px;">Column 1</div>
-                      <div style="flex:1;border:1px dashed #ccc;padding:10px;">Column 2</div>
-                    </div>`,
-        },
-      ];
+      },
+    },
+    {
+      id: "button-block",
+      label: "Button",
+      category: "Basic",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "button",
+            attributes: {
+              style:
+                "padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;",
+            },
+            content: "Click Me",
+          },
+        ],
+      },
+    },
+    {
+      id: "row-col",
+      label: "Row/Column",
+      category: "Layout",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "div",
+            attributes: {
+              style: "display:flex;gap:10px;",
+            },
+            components: [
+              {
+                tagName: "div",
+                attributes: {
+                  style:
+                    "flex:1;border:1px dashed #ccc;padding:10px;min-height:50px;",
+                },
+                content: "Column 1",
+              },
+              {
+                tagName: "div",
+                attributes: {
+                  style:
+                    "flex:1;border:1px dashed #ccc;padding:10px;min-height:50px;",
+                },
+                content: "Column 2",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ];
 
   customBlocks.forEach((block) => editor.BlockManager.add(block.id, block));
 }
