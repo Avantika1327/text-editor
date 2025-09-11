@@ -9,31 +9,47 @@ export function addCustomBlocks(editor: any) {
         components: [
           {
             tagName: "header",
-            attributes: {
-              style:
-                "display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid #ddd;",
-            },
+            classes: ['custom-header'],
+            stylable: true,
             components: [
               {
                 tagName: "img",
                 attributes: {
                   src: "https://via.placeholder.com/100",
-                  style: "height:50px",
                 },
+                classes: ['header-logo'],
+                stylable: ['height', 'width'],
               },
               {
                 tagName: "div",
                 components: [
                   {
-                    tagName: "h2",
+                    type: "text",
                     content: "{{companyName}}",
+                    classes: ['company-name'],
+                    stylable: true,
                   },
                   {
                     tagName: "div",
                     components: [
-                      { tagName: "p", content: "{{address}}" },
-                      { tagName: "p", content: "{{email}}" },
-                      { tagName: "p", content: "{{phone}}" },
+                      {
+                        type: "text",
+                        content: "{{address}}",
+                        classes: ['company-address'],
+                        stylable: true,
+                      },
+                      {
+                        type: "text",
+                        content: "{{email}}",
+                        classes: ['company-email'],
+                        stylable: true,
+                      },
+                      {
+                        type: "text",
+                        content: "{{phone}}",
+                        classes: ['company-phone'],
+                        stylable: true,
+                      },
                     ],
                   },
                 ],
@@ -52,12 +68,15 @@ export function addCustomBlocks(editor: any) {
         components: [
           {
             tagName: "footer",
-            attributes: {
-              style:
-                "text-align:center;padding:20px;border-top:1px solid #ddd;",
-            },
-            content:
-              "© {{year}} {{companyName}} Pvt Ltd. All rights reserved.",
+            classes: ['custom-footer'],
+            stylable: true,
+            components: [
+              {
+                type: "text",
+                content: "© {{year}} {{companyName}} Pvt Ltd. All rights reserved.",
+                stylable: true,
+              },
+            ],
           },
         ],
       },
@@ -71,42 +90,18 @@ export function addCustomBlocks(editor: any) {
         components: [
           {
             tagName: "table",
-            attributes: {
-              style:
-                "width:100%;border-collapse:collapse;text-align:center;",
-            },
+            classes: ['custom-table'],
+            stylable: true,
             components: [
               {
                 tagName: "tr",
                 components: [
-                  {
+                  ...["Col 1", "Col 2", "Col 3", "Col 4"].map((col) => ({
                     tagName: "td",
-                    attributes: {
-                      style: "border:1px solid #000;padding:8px;",
-                    },
-                    content: "Col 1",
-                  },
-                  {
-                    tagName: "td",
-                    attributes: {
-                      style: "border:1px solid #000;padding:8px;",
-                    },
-                    content: "Col 2",
-                  },
-                  {
-                    tagName: "td",
-                    attributes: {
-                      style: "border:1px solid #000;padding:8px;",
-                    },
-                    content: "Col 3",
-                  },
-                  {
-                    tagName: "td",
-                    attributes: {
-                      style: "border:1px solid #000;padding:8px;",
-                    },
-                    content: "Col 4",
-                  },
+                    content: col,
+                    classes: ['table-cell'],
+                    stylable: true,
+                  })),
                 ],
               },
               {
@@ -114,19 +109,17 @@ export function addCustomBlocks(editor: any) {
                 components: [
                   {
                     tagName: "td",
-                    attributes: {
-                      colspan: "2",
-                      style: "border:1px solid #000;padding:8px;",
-                    },
+                    attributes: { colspan: "2" },
                     content: "Merged",
+                    classes: ['table-cell'],
+                    stylable: true,
                   },
                   {
                     tagName: "td",
-                    attributes: {
-                      colspan: "2",
-                      style: "border:1px solid #000;padding:8px;",
-                    },
+                    attributes: { colspan: "2" },
                     content: "Merged",
+                    classes: ['table-cell'],
+                    stylable: true,
                   },
                 ],
               },
@@ -142,6 +135,7 @@ export function addCustomBlocks(editor: any) {
       content: {
         type: "text",
         content: "Editable text here",
+        stylable: true,
       },
     },
     {
@@ -154,6 +148,7 @@ export function addCustomBlocks(editor: any) {
           src: "https://via.placeholder.com/200",
           alt: "image",
         },
+        stylable: ['width', 'height', 'border-radius', 'box-shadow'],
       },
     },
     {
@@ -165,11 +160,9 @@ export function addCustomBlocks(editor: any) {
         components: [
           {
             tagName: "button",
-            attributes: {
-              style:
-                "padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;",
-            },
             content: "Click Me",
+            classes: ['custom-button'],
+            stylable: true,
           },
         ],
       },
@@ -183,25 +176,20 @@ export function addCustomBlocks(editor: any) {
         components: [
           {
             tagName: "div",
-            attributes: {
-              style: "display:flex;gap:10px;",
-            },
+            classes: ['row'],
+            stylable: true,
             components: [
               {
                 tagName: "div",
-                attributes: {
-                  style:
-                    "flex:1;border:1px dashed #ccc;padding:10px;min-height:50px;",
-                },
+                classes: ['col'],
                 content: "Column 1",
+                stylable: true,
               },
               {
                 tagName: "div",
-                attributes: {
-                  style:
-                    "flex:1;border:1px dashed #ccc;padding:10px;min-height:50px;",
-                },
+                classes: ['col'],
                 content: "Column 2",
+                stylable: true,
               },
             ],
           },
@@ -211,7 +199,72 @@ export function addCustomBlocks(editor: any) {
   ];
 
   customBlocks.forEach((block) => editor.BlockManager.add(block.id, block));
+
+  // Add default styles to make the classes work visually
+  editor.CssComposer.addRules([
+    {
+      selectors: ['.custom-header'],
+      style: {
+        display: 'flex',
+        'justify-content': 'space-between',
+        'align-items': 'center',
+        padding: '20px',
+        'border-bottom': '1px solid #ddd',
+      },
+    },
+    {
+      selectors: ['.custom-footer'],
+      style: {
+        'text-align': 'center',
+        padding: '20px',
+        'border-top': '1px solid #ddd',
+      },
+    },
+    {
+      selectors: ['.custom-table'],
+      style: {
+        width: '100%',
+        'border-collapse': 'collapse',
+        'text-align': 'center',
+      },
+    },
+    {
+      selectors: ['.table-cell'],
+      style: {
+        border: '1px solid #000',
+        padding: '8px',
+      },
+    },
+    {
+      selectors: ['.custom-button'],
+      style: {
+        padding: '10px 20px',
+        background: '#2563eb',
+        color: 'white',
+        border: 'none',
+        'border-radius': '6px',
+        cursor: 'pointer',
+      },
+    },
+    {
+      selectors: ['.row'],
+      style: {
+        display: 'flex',
+        gap: '10px',
+      },
+    },
+    {
+      selectors: ['.col'],
+      style: {
+        flex: '1',
+        border: '1px dashed #ccc',
+        padding: '10px',
+        'min-height': '50px',
+      },
+    },
+  ]);
 }
+
 
 export function addDynamicFields(editor: any) {
   const fields = [

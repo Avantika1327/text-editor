@@ -7,13 +7,30 @@ export async function exportToPdf(html: string, css: string, data: Record<string
     html = html.replace(new RegExp(`{{${key}}}`, "g"), data[key]);
   });
 
-  // Create container for rendering
+  // Wrap HTML + CSS inside a complete document
+  const fullHtml = `
+    <html>
+      <head>
+        <meta charset="utf-8"/>
+        <style>
+          ${css}
+        </style>
+      </head>
+      <body style="margin:0; padding:0;">
+        ${html}
+      </body>
+    </html>
+  `;
+
+  // Create hidden container for rendering
   const container = document.createElement("div");
-  container.style.width = "794px"; // A4 width
-  container.style.minHeight = "1123px"; // A4 height
+  container.style.width = "820px"; // A4 width in px (96dpi)
+  container.style.minHeight = "1000px"; // A4 height in px
   container.style.background = "white";
-  container.innerHTML = `<style>${css}</style>${html}`;
-  document.body.appendChild(container);
+  container.style.position = "absolute";
+  container.style.left = "-9999px"; // keep offscreen
+  container.innerHTML = fullHtml;
+  // document.body.appendChild(container);
 
   // Convert to canvas
   const canvas = await html2canvas(container, { scale: 2 });

@@ -9,8 +9,10 @@ export default function TemplateBuilder() {
   const handleSave = () => {
     if (!editor) return;
     const html = editor.getHtml();
-    const css = editor.getCss();
+    const css = editor.getCss({ withMedia: true });
     const json = editor.getComponents();
+    console.log(css);
+
     console.log("Template saved", { html, css, json });
     alert("✅ Template Saved (implement DB save here)");
   };
@@ -18,7 +20,8 @@ export default function TemplateBuilder() {
   const handlePreview = () => {
     if (!editor) return;
     const html = editor.getHtml();
-    const css = editor.getCss();
+    const css = editor.getCss({ withMedia: true });
+    console.log(css);
     exportToPdf(html, css, {
       companyName: "Avantika Solutions",
       address: "Mumbai, India",
