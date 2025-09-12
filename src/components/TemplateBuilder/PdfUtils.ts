@@ -24,16 +24,20 @@ export async function exportToPdf(html: string, css: string, data: Record<string
 
   // Create hidden container for rendering
   const container = document.createElement("div");
-  container.style.width = "820px"; // A4 width in px (96dpi)
-  container.style.minHeight = "1000px"; // A4 height in px
+  container.style.width = "820px"; 
+  container.style.minHeight = "1160px";
   container.style.background = "white";
   container.style.position = "absolute";
-  container.style.left = "-9999px"; // keep offscreen
+  container.style.left = "-9999px";
   container.innerHTML = fullHtml;
-  // document.body.appendChild(container);
+
+  // Append to DOM so html2canvas can access it
+  document.body.appendChild(container);
+
+
 
   // Convert to canvas
-  const canvas = await html2canvas(container, { scale: 2 });
+  const canvas = await html2canvas(container, { scale: 2, useCORS: true });
   const imgData = canvas.toDataURL("image/png");
 
   const pdf = new jsPDF("p", "pt", "a4");
@@ -43,7 +47,6 @@ export async function exportToPdf(html: string, css: string, data: Record<string
   const imgWidth = pageWidth;
   const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-  // Add pages if needed
   let heightLeft = imgHeight;
   let position = 0;
 

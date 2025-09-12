@@ -19,8 +19,9 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
         storageManager: false,
         plugins: ["gjs-blocks-basic"],
         blockManager: { appendTo: "#blocks" },
+        canvas: { styles: [], scripts: [] },
         deviceManager: {
-          devices: [{ name: "A4", width: "800px", height: "1200px" }],
+          devices: [{ name: "A4", width: "820px", height: "1123px" }],
         },
       });
 

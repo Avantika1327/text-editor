@@ -11,6 +11,7 @@ export default function TemplateBuilder() {
     const html = editor.getHtml();
     const css = editor.getCss({ withMedia: true });
     const json = editor.getComponents();
+
     console.log(css);
 
     console.log("Template saved", { html, css, json });
@@ -31,6 +32,30 @@ export default function TemplateBuilder() {
       username: "Avantika",
       date: "10-09-2025",
       invoiceNumber: "INV-12345",
+      signatoryBy: "John Doe",
+      signatoryOn: "15-09-2025",
+      category: "Software",
+      subcategory: "Development",
+      userdetails: "Jane Smith",
+      department: "Engineering",
+
+      "Prepared By":"qwert",
+      "Approve By":"asdfg",
+      "Verified By" :"zxcvb",
+      "Done By" :"hjkl;",
+      "Validated By": "poiuy",
+      "Issued By" : "nmnnmnj",
+
+
+
+      "Prepared On":"qwert",
+      "Approve On":"asdfg",
+      "Verified On" :"zxcvb",
+      "Done On" :"hjkl;",
+      "Validated On": "poiuy",
+      "Issued On" : "nmnnmnj",
+      "Effective On" : "lkmjnhbgv"
+  
     });
   };
 
