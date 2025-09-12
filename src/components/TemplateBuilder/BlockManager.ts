@@ -13,7 +13,8 @@ export function addCustomBlocks(editor: any) {
             stylable: true,
             components: [
               {
-                tagName: "img",
+                // tagName: "img",
+                type: "image",
                 attributes: {
                   src: "https://via.placeholder.com/100",
                 },
@@ -267,10 +268,35 @@ export function addCustomBlocks(editor: any) {
 
 
 export function addDynamicFields(editor: any) {
+  const dynamicJSON = {
+    signatoryBy: [
+      "Prepared By",
+      "Approve By",
+      "Verified By",
+      "Done By",
+      "Validated By",
+      "Issued By",
+    ],
+    signatoryOn: [
+      "Prepared On",
+      "Approve On",
+      "Verified On",
+      "Done On",
+      "Validated On",
+      "Issued On",
+      "Effective On",
+    ],
+  };
+
+  // Static fields
   const fields = [
     { id: "username", label: "Username" },
     { id: "date", label: "Date" },
     { id: "invoiceNumber", label: "Invoice No" },
+    { id: "category", label: "Category" },
+    { id: "subcategory", label: "Sub Category" },
+    { id: "userdetails", label: "User Details" },
+    { id: "department", label: "Department" },
   ];
 
   fields.forEach((field) => {
@@ -280,4 +306,38 @@ export function addDynamicFields(editor: any) {
       content: `<span data-dynamic="${field.id}">{{${field.id}}}</span>`,
     });
   });
+
+  // Signatory By block
+  editor.BlockManager.add("signatory-by", {
+    label: "Signatory By",
+    category: "Dynamic Fields",
+    content: `
+      <div class="signatory-by-container">
+        ${dynamicJSON.signatoryBy
+          .map(
+            (item) =>
+              `<div class="signatory-item"><strong>${item}:</strong> <span data-dynamic="${item}">{{${item}}}</span></div>`
+          )
+          .join("")}
+      </div>
+    `,
+  });
+
+  // Signatory On block
+  editor.BlockManager.add("signatory-on", {
+    label: "Signatory On",
+    category: "Dynamic Fields",
+    content: `
+      <div class="signatory-on-container">
+        ${dynamicJSON.signatoryOn
+          .map(
+            (item) =>
+              `<div class="signatory-item"><strong>${item}:</strong> <span data-dynamic="${item}">{{${item}}}</span></div>`
+          )
+          .join("")}
+      </div>
+    `,
+  });
+
+  
 }
