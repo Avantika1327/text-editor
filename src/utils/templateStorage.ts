@@ -52,7 +52,12 @@ export const saveTemplate = (tpl: TemplateItem) => {
   if (idx >= 0) {
     items[idx] = { ...tpl, updatedAt: new Date().toISOString() };
   } else {
-    items.push({ ...tpl, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), archived: false });
+    items.push({
+      ...tpl,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      archived: false,
+    });
   }
 
   writeAll(items);
@@ -92,4 +97,27 @@ export const duplicateTemplate = (id: string) => {
 
   saveTemplate(copy);
   return copy;
+};
+
+// 🔹 Get summary report
+export const getSummary = () => {
+  const items = getTemplates();
+
+  const total = items.length;
+  const archived = items.filter((t) => t.archived).length;
+  const active = total - archived;
+
+  // Last updated template (latest updatedAt)
+  const lastUpdated = items.length
+    ? items.reduce((latest, tpl) =>
+        tpl.updatedAt > latest.updatedAt ? tpl : latest
+      ).updatedAt
+    : null;
+
+  return {
+    total,
+    active,
+    archived,
+    lastUpdated,
+  };
 };
