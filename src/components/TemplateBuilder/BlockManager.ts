@@ -222,7 +222,6 @@ export function addCustomBlocks(editor: any) {
 
   customBlocks.forEach((block) => editor.BlockManager.add(block.id, block));
 
-  // Add default styles to make the classes work visually
   editor.CssComposer.addRules([
     {
       selectors: ['.custom-header'],
@@ -298,76 +297,174 @@ export function addCustomBlocks(editor: any) {
 
 
 export function addDynamicFields(editor: any) {
-  const dynamicJSON = {
-    signatoryBy: [
-      "Prepared By",
-      "Approve By",
-      "Verified By",
-      "Done By",
-      "Validated By",
-      "Issued By",
+  const dynamicData = {
+    date: "2025-09-12",
+    username: [
+      "Amit Sharma",
+      "Nikita Nikam",
+      "Ravi Patil",
+      "Sneha Kulkarni",
+      "Vishal Jadhav",
+      "Priya Deshmukh",
+      "Rahul Joshi",
+      "Anjali Pawar",
+      "Akash Shinde",
+      "Meera Patankar",
+      "Sagar More"
     ],
-    signatoryOn: [
-      "Prepared On",
-      "Approve On",
-      "Verified On",
-      "Done On",
-      "Validated On",
-      "Issued On",
-      "Effective On",
+    department: [
+      "Administration",
+      "Sales",
+      "Procurement",
+      "Accounts",
+      "HR",
+      "Sales",
+      "Maintenance",
+      "Production",
+      "IT",
+      "Logistics",
+      "Procurement"
     ],
+    category: [
+      "Purchase",
+      "Sales",
+      "Purchase",
+      "Finance",
+      "HR",
+      "Sales",
+      "Maintenance",
+      "Production",
+      "IT",
+      "Logistics",
+      "Purchase"
+    ],
+    subcategory: [
+      "Office Supplies",
+      "Retail",
+      "Raw Material",
+      "Audit",
+      "Recruitment",
+      "Wholesale",
+      "Electrical",
+      "Assembly",
+      "Support",
+      "Transport",
+      "Spare Parts"
+    ],
+    invoiceNo: [
+      "INV-1001",
+      "INV-1002",
+      "INV-1003",
+      "INV-1004",
+      "INV-1005",
+      "INV-1006",
+      "INV-1007",
+      "INV-1008",
+      "INV-1009",
+      "INV-1010",
+      "INV-1011"
+    ],
+    userDetails: [
+      { email: "amit.sharma@example.com", phone: "+91-9876543210", address: "Pune, Maharashtra" },
+      { email: "nikita.nikam@example.com", phone: "+91-9876500000", address: "Mumbai, Maharashtra" },
+      { email: "ravi.patil@example.com", phone: "+91-9123456789", address: "Nashik, Maharashtra" },
+      { email: "sneha.kulkarni@example.com", phone: "+91-9988776655", address: "Kolhapur, Maharashtra" },
+      { email: "vishal.jadhav@example.com", phone: "+91-9090909090", address: "Aurangabad, Maharashtra" },
+      { email: "priya.deshmukh@example.com", phone: "+91-9012345678", address: "Nagpur, Maharashtra" },
+      { email: "rahul.joshi@example.com", phone: "+91-9876123456", address: "Satara, Maharashtra" },
+      { email: "anjali.pawar@example.com", phone: "+91-9898989898", address: "Solapur, Maharashtra" },
+      { email: "akash.shinde@example.com", phone: "+91-9234567890", address: "Latur, Maharashtra" },
+      { email: "meera.patankar@example.com", phone: "+91-9765432100", address: "Beed, Maharashtra" },
+      { email: "sagar.more@example.com", phone: "+91-9345678901", address: "Sangli, Maharashtra" }
+    ],
+    signatoryBy: {
+      "Prepared By": "Amit Sharma",
+      "Approve By": "Nikita Nikam",
+      "Verified By": "Ravi Patil",
+      "Done By": "Sneha Kulkarni",
+      "Validated By": "Vishal Jadhav",
+      "Issued By": "Priya Deshmukh"
+    },
+    signatoryOn: {
+      "Prepared On": "2025-09-12 10:30 AM",
+      "Approve On": "2025-09-12 11:15 AM",
+      "Verified On": "2025-09-12 01:00 PM",
+      "Done On": "2025-09-12 02:45 PM",
+      "Validated On": "2025-09-12 03:30 PM",
+      "Issued On": "2025-09-12 04:00 PM",
+      "Effective On": "2025-09-13 09:00 AM"
+    }
   };
 
-  // Static fields
   const fields = [
-    { id: "username", label: "Username" },
-    { id: "date", label: "Date" },
-    { id: "invoiceNumber", label: "Invoice No" },
-    { id: "category", label: "Category" },
-    { id: "subcategory", label: "Sub Category" },
-    { id: "userdetails", label: "User Details" },
-    { id: "department", label: "Department" },
-  ];
+    "username",
+    "department",
+    "category",
+    "subcategory",
+    "invoiceNo",
+    "userDetails",
+    "signatoryBy",
+    "signatoryOn"
+  ] as const;
+  type FieldKey = typeof fields[number];
 
-  fields.forEach((field) => {
-    editor.BlockManager.add(`field-${field.id}`, {
-      label: field.label,
+  fields.forEach((fieldKey) => {
+    let values: any[] = [];
+
+    // Object fields (signatoryBy, signatoryOn) convert to array
+    if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
+      values = Object.entries(dynamicData[fieldKey]).map(([key, val]) => ({ key, value: val }));
+    } else {
+      values = dynamicData[fieldKey as FieldKey] as any[];
+    }
+
+    editor.BlockManager.add(`field-${fieldKey}`, {
+      label: fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1),
       category: "Dynamic Fields",
-      content: `<span data-dynamic="${field.id}">{{${field.id}}}</span>`,
+      content: `<div class="dynamic-field" data-field="${fieldKey}">
+        <select onchange="window.handleDynamicSelect(this)">
+          <option value="">Select ${fieldKey}</option>
+          ${values
+            .map((val: any) => {
+              if (fieldKey === "userDetails") {
+                return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
+              }
+              if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
+                return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
+              }
+              return `<option value="${val}">${val}</option>`;
+            })
+            .join("")}
+        </select>
+        <div class="selected-value" style="margin-top:4px;"></div>
+      </div>`,
     });
   });
 
-  // Signatory By block
-  editor.BlockManager.add("signatory-by", {
-    label: "Signatory By",
+  editor.BlockManager.add("field-date", {
+    label: "Date",
     category: "Dynamic Fields",
-    content: `
-      <div class="signatory-by-container">
-        ${dynamicJSON.signatoryBy
-          .map(
-            (item) =>
-              `<div class="signatory-item"><strong>${item}:</strong> <span data-dynamic="${item}">{{${item}}}</span></div>`
-          )
-          .join("")}
-      </div>
-    `,
+    content: `<span class="dynamic-date">${dynamicData.date}</span>`,
   });
-
-  // Signatory On block
-  editor.BlockManager.add("signatory-on", {
-    label: "Signatory On",
-    category: "Dynamic Fields",
-    content: `
-      <div class="signatory-on-container">
-        ${dynamicJSON.signatoryOn
-          .map(
-            (item) =>
-              `<div class="signatory-item"><strong>${item}:</strong> <span data-dynamic="${item}">{{${item}}}</span></div>`
-          )
-          .join("")}
-      </div>
-    `,
-  });
-
-
 }
+
+(window as any).handleDynamicSelect = function (selectEl: HTMLSelectElement) {
+  const container = selectEl.nextElementSibling as HTMLElement;
+  const rawValue = selectEl.value;
+
+  if (!rawValue) {
+    container.innerHTML = "";
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(rawValue);
+    container.innerHTML = `
+      <div><b>Email:</b> ${parsed.email}</div>
+      <div><b>Phone:</b> ${parsed.phone}</div>
+      <div><b>Address:</b> ${parsed.address}</div>
+    `;
+  } catch {
+    container.innerHTML = `<span>${rawValue}</span>`;
+  }
+};
