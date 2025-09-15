@@ -1,65 +1,34 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-export async function exportToPdf(html: string, css: string, data: Record<string, string>) {
-  // Replace placeholders with dynamic values
-  Object.keys(data).forEach((key) => {
-    html = html.replace(new RegExp(`{{${key}}}`, "g"), data[key]);
-  });
+export async function exportToPdf(html: string, css: string) {
 
-  // Wrap HTML + CSS inside a complete document
-  const fullHtml = `
-    <html>
-      <head>
-        <meta charset="utf-8"/>
-        <style>
-          ${css}
-        </style>
-      </head>
-      <body style="margin:0; padding:0;">
-        ${html}
-      </body>
-    </html>
-  `;
-
-  // Create hidden container for rendering
   const container = document.createElement("div");
-  container.style.width = "820px"; 
-  container.style.minHeight = "1160px";
-  container.style.background = "white";
   container.style.position = "absolute";
   container.style.left = "-9999px";
-  container.innerHTML = fullHtml;
-
-  // Append to DOM so html2canvas can access it
+  container.style.top = "0";
+  container.style.width = "800px";
+  container.innerHTML = `
+    <html>
+      <head>
+        <style>${css}</style>
+      </head>
+      <body>${html}</body>
+    </html>
+  `;
   document.body.appendChild(container);
 
+  
+  const canvas = await html2canvas(container, { scale: 2 });
+  document.body.removeChild(container); 
 
-
-  // Convert to canvas
-  const canvas = await html2canvas(container, { scale: 2, useCORS: true });
   const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
 
-  const pdf = new jsPDF("p", "pt", "a4");
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgProps = pdf.getImageProperties(imgData);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-  let heightLeft = imgHeight;
-  let position = 0;
-
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
-
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-  }
-
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
   pdf.save("template.pdf");
-  document.body.removeChild(container);
 }

@@ -10,9 +10,8 @@ import type { TemplateItem } from "../../utils/templateStorage";
 export default function TemplateBuilder() {
   const [editor, setEditor] = useState<any>(null);
   const navigate = useNavigate();
-  const { id } = useParams(); // जर edit करत असशील तर URL मधून id येईल
+  const { id } = useParams();
 
-  // जर edit mode असेल तर जुना template load करायचा
   useEffect(() => {
     if (id && editor) {
       const template = getTemplate(id);
@@ -30,8 +29,8 @@ export default function TemplateBuilder() {
     const json = editor.getComponents();
     const now = new Date().toISOString();
     const template: TemplateItem = {
-      id: id || generateId(), // नवीन असल्यास unique id
-      name: `Template ${id || Date.now()}`, // default नाव
+      id: id || generateId(),
+      name: `Template ${id || Date.now()}`,
       html,
       css,
       json,
@@ -41,51 +40,71 @@ export default function TemplateBuilder() {
     };
 
     saveTemplate(template);
-
     alert("✅ Template Saved!");
-    navigate("/"); // Save झाल्यावर List ला जा
+    navigate("/");
   };
 
-  const handlePreview = () => {
-    if (!editor) return;
-    const html = editor.getHtml();
-    const css = editor.getCss({ withMedia: true });
+const handlePreview = async () => {
+  if (!editor) return;
 
-    exportToPdf(html, css, {
-      companyName: "Avantika Solutions",
-      address: "Mumbai, India",
-      email: "info@avantika.com",
-      phone: "+91-9876543210",
-      year: "2025",
-      username: "Avantika",
-      date: "10-09-2025",
-      invoiceNumber: "INV-12345",
-      signatoryBy: "John Doe",
-      signatoryOn: "15-09-2025",
-      category: "Software",
-      subcategory: "Development",
-      userdetails: "Jane Smith",
-      department: "Engineering",
+  const css = editor.getCss({ withMedia: true });
 
-      "Prepared By":"qwert",
-      "Approve By":"asdfg",
-      "Verified By" :"zxcvb",
-      "Done By" :"hjkl;",
-      "Validated By": "poiuy",
-      "Issued By" : "nmnnmnj",
+  const iframe = document.querySelector<HTMLIFrameElement>(".gjs-frame");
+  if (!iframe) return;
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!iframeDoc) return;
 
-
-
-      "Prepared On":"qwert",
-      "Approve On":"asdfg",
-      "Verified On" :"zxcvb",
-      "Done On" :"hjkl;",
-      "Validated On": "poiuy",
-      "Issued On" : "nmnnmnj",
-      "Effective On" : "lkmjnhbgv"
   
-    });
-  };
+  iframeDoc.querySelectorAll<HTMLSelectElement>("select").forEach((selectEl) => {
+    const value = selectEl.value || "";
+    const span = document.createElement("span");
+    span.style.fontWeight = "bold";
+    span.textContent = value || "(Not Selected)";
+    selectEl.replaceWith(span);
+  });
+
+  
+  iframeDoc.querySelectorAll<HTMLInputElement>("input").forEach((inputEl) => {
+    const value = inputEl.value || inputEl.placeholder || "";
+    const span = document.createElement("span");
+    span.style.fontWeight = "bold";
+    span.textContent = value;
+    inputEl.replaceWith(span);                                                                                                                                                                                                                                                                                                                                                                                              
+  });
+
+  
+  iframeDoc.querySelectorAll<HTMLTextAreaElement>("textarea").forEach((txtEl) => {
+    const value = txtEl.value || "";
+    const div = document.createElement("div");
+    div.style.fontWeight = "bold";
+    div.textContent = value;
+    txtEl.replaceWith(div);
+  });
+
+  
+  iframeDoc.querySelectorAll<HTMLImageElement>("img").forEach((imgEl) => {
+    const style = window.getComputedStyle(imgEl);
+    const width = style.width;
+    const height = style.height;
+
+  
+    imgEl.setAttribute(
+      "style",
+      `width:${width}; height:${height}; object-fit: contain;`
+    );
+  });
+
+  
+  let finalHtml = iframeDoc.body.innerHTML;
+  finalHtml = finalHtml.replace(/{{companyName}}/g, "Avantika Solutions");
+  finalHtml = finalHtml.replace(/{{address}}/g, "Mumbai, India");
+  finalHtml = finalHtml.replace(/{{email}}/g, "info@avantika.com");
+  finalHtml = finalHtml.replace(/{{phone}}/g, "+91-9876543210");
+  finalHtml = finalHtml.replace(/{{year}}/g, "2025");
+
+  
+  await exportToPdf(finalHtml, css);
+};
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
