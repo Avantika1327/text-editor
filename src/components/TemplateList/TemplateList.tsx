@@ -4,9 +4,11 @@ import {
   getTemplates,
   deleteTemplate,
   setArchive,
-  duplicateTemplate,
 } from "../../utils/templateStorage";
 import type { TemplateItem } from "../../utils/templateStorage";
+
+// Import icons
+import { FaEdit, FaEye, FaArchive, FaBoxOpen, FaTrash } from "react-icons/fa";
 
 export default function TemplateList() {
   const navigate = useNavigate();
@@ -31,15 +33,6 @@ export default function TemplateList() {
     refresh();
   };
 
-  const onDuplicate = (id: string) => {
-    const copy = duplicateTemplate(id);
-    if (copy) {
-      alert("✅ Template duplicated!");
-      refresh();
-      navigate(`/builder/${copy.id}`);
-    }
-  };
-
   const filtered = templates.filter((t) => {
     if (!showArchived && t.archived) return false;
     if (query.trim() === "") return true;
@@ -54,7 +47,7 @@ export default function TemplateList() {
           className="btn btn-primary"
           onClick={() => navigate("/builder")}
         >
-          New Template
+          + New Template
         </button>
       </div>
 
@@ -88,7 +81,7 @@ export default function TemplateList() {
               <th>Created</th>
               <th>Updated</th>
               <th>Archived</th>
-              <th style={{ width: "250px" }}>Actions</th>
+              <th style={{ width: "220px" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -107,38 +100,40 @@ export default function TemplateList() {
                   </span>
                 </td>
                 <td>
-                  <div className="btn-group">
+                  <div className="d-flex flex-wrap gap-2">
                     <button
-                      className="btn  btn-sm btn-warning"
+                      className="btn btn-sm btn-warning d-flex align-items-center"
                       onClick={() => navigate(`/builder/${t.id}`)}
                     >
-                     Edit
+                      <FaEdit className="me-1" /> 
                     </button>
                     <button
-                      className="btn btn-sm btn-info text-white"
+                      className="btn btn-sm btn-info text-white d-flex align-items-center"
                       onClick={() => navigate(`/preview/${t.id}`)}
                     >
-                       View
+                      <FaEye className="me-1" /> 
                     </button>
                     <button
-                      className={`btn btn-sm ${
+                      className={`btn btn-sm d-flex align-items-center ${
                         t.archived ? "btn-secondary" : "btn-outline-secondary"
                       }`}
                       onClick={() => onArchiveToggle(t.id, t.archived)}
                     >
-                      {t.archived ? "Unarchive" : "Archive"}
+                      {t.archived ? (
+                        <>
+                          <FaBoxOpen className="me-1" /> 
+                        </>
+                      ) : (
+                        <>
+                          <FaArchive className="me-1" /> 
+                        </>
+                      )}
                     </button>
                     <button
-                      className="btn btn-sm btn-success"
-                      onClick={() => onDuplicate(t.id)}
-                    >
-                      Duplicate
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
+                      className="btn btn-sm btn-danger d-flex align-items-center"
                       onClick={() => onDelete(t.id)}
                     >
-                       Delete
+                      <FaTrash className="me-1" /> 
                     </button>
                   </div>
                 </td>

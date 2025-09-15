@@ -13,7 +13,6 @@ export function addCustomBlocks(editor: any) {
             stylable: true,
             components: [
               {
-                // tagName: "img",
                 type: "image",
                 attributes: {
                   src: "https://via.placeholder.com/100",
@@ -197,6 +196,28 @@ export function addCustomBlocks(editor: any) {
         ],
       },
     },
+    {
+      id: "div-block",
+      label: "Div Block",
+      category: "Layout",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "div",
+            classes: ['custom-div'],
+            stylable: true,
+            components: [
+              {
+                type: "text",
+                content: "Editable content inside div",
+                stylable: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
   ];
 
   customBlocks.forEach((block) => editor.BlockManager.add(block.id, block));
@@ -260,6 +281,15 @@ export function addCustomBlocks(editor: any) {
         flex: '1',
         border: '1px dashed #ccc',
         padding: '10px',
+        'min-height': '50px',
+      },
+    },
+    {
+      selectors: ['.custom-div'],
+      style: {
+        padding: '15px',
+        border: '1px solid #ccc',
+        'border-radius': '6px',
         'min-height': '50px',
       },
     },
@@ -339,5 +369,5 @@ export function addDynamicFields(editor: any) {
     `,
   });
 
-  
+
 }
