@@ -8,12 +8,14 @@ import {
 import type { TemplateItem as TItem } from "../../utils/templateStorage";
 
 // Icons
-import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye, FaArchive, FaBoxOpen } from "react-icons/fa";
 
 export default function TemplateList() {
   const navigate = useNavigate();
   const [templates, setTemplates] = useState<TItem[]>([]);
   const [query, setQuery] = useState("");
+  
+  const [showArchived, setShowArchived] = useState(false); // ✅ show/hide archived
 
   const refresh = () => setTemplates(getTemplates());
 
@@ -32,9 +34,10 @@ export default function TemplateList() {
     refresh();
   };
 
-  const filtered = templates.filter((t) =>
-    t.name.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = templates.filter((t) => {
+    if (!showArchived && t.archived) return false; // hide archived
+    return t.name.toLowerCase().includes(query.toLowerCase());
+  });
 
   return (
     <div className="container py-4">
@@ -59,13 +62,28 @@ export default function TemplateList() {
         </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search templates..."
-        className="form-control mb-3 w-25"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      {/* Search + Show Archived */}
+      <div className="d-flex align-items-center mb-3 gap-3">
+        <input
+          type="text"
+          placeholder="Search templates..."
+          className="form-control w-25"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <div className="form-check">
+          <input
+            type="checkbox"
+            id="showArchived"
+            className="form-check-input"
+            checked={showArchived}
+            onChange={(e) => setShowArchived(e.target.checked)}
+          />
+          <label className="form-check-label" htmlFor="showArchived">
+            Show Archived
+          </label>
+        </div>
+      </div>
 
       <div className="table-responsive shadow-sm">
         <table className="table table-bordered align-middle">
@@ -115,9 +133,9 @@ export default function TemplateList() {
                     className="btn btn-sm btn-warning"
                     onClick={() => navigate(`/builder/${t.id}`)}
                   >
-                    <FaEdit />                   </button>
+                    <FaEdit /> 
+                  </button>
 
-                  {/* Preview / View button */}
                   <button
                     className="btn btn-sm btn-info text-white"
                     onClick={() => navigate(`/preview/${t.id}`)}
@@ -126,12 +144,13 @@ export default function TemplateList() {
                   </button>
 
                   <button
-                    className={`btn btn-sm ${
+                    className={`btn btn-sm d-flex align-items-center ${
                       t.archived ? "btn-secondary" : "btn-outline-secondary"
                     }`}
                     onClick={() => onArchiveToggle(t.id, t.archived)}
                   >
-                    {t.archived ? "Unarchive" : "Archive"}
+                    {t.archived ? <FaBoxOpen className="me-1" /> : <FaArchive className="me-1" />}
+                    {t.archived ? "" : ""}
                   </button>
 
                   <button
