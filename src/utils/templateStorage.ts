@@ -13,7 +13,7 @@ export interface TemplateItem {
 
 // LocalStorage key
 const KEY = "grapes_templates_v1";
-
+  
 // 🔹 Internal: read all items
 const readAll = (): TemplateItem[] => {
   try {

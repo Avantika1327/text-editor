@@ -13,6 +13,7 @@ export function addCustomBlocks(editor: any) {
             stylable: true,
             components: [
               {
+                // tagName: "img",
                 type: "image",
                 attributes: {
                   src: "https://via.placeholder.com/100",
@@ -82,52 +83,60 @@ export function addCustomBlocks(editor: any) {
       },
     },
     {
-      id: "custom-table",
-      label: "Table",
-      category: "Custom",
-      content: {
-        type: "default",
+  id: "custom-table",
+  label: "Table",
+  category: "Custom",
+  content: {
+    type: "default",
+    components: [
+      {
+        tagName: "div",
+        style: { display: "flex", "justify-content": "center", "margin-top": "20px" },
         components: [
           {
             tagName: "table",
-            classes: ['custom-table'],
-            stylable: true,
+            classes: ["solution-table"],
+            stylable: false,
             components: [
               {
-                tagName: "tr",
+                tagName: "thead",
                 components: [
-                  ...["Col 1", "Col 2", "Col 3", "Col 4"].map((col) => ({
-                    tagName: "td",
-                    content: col,
-                    classes: ['table-cell'],
-                    stylable: true,
-                  })),
+                  {
+                    tagName: "tr",
+                    components: [
+                      ...["Date", "Quantity Prepared", "Prepared By", "Supervised By", "Distributed to Departments"].map(
+                        (header) => ({
+                          tagName: "th",
+                          content: header,
+                          classes: ["solution-th"],
+                          stylable: false,
+                        })
+                      ),
+                    ],
+                  },
                 ],
               },
               {
-                tagName: "tr",
-                components: [
-                  {
+                tagName: "tbody",
+                components: Array.from({ length: 8 }).map(() => ({
+                  tagName: "tr",
+                  components: Array.from({ length: 5 }).map(() => ({
                     tagName: "td",
-                    attributes: { colspan: "2" },
-                    content: "Merged",
-                    classes: ['table-cell'],
-                    stylable: true,
-                  },
-                  {
-                    tagName: "td",
-                    attributes: { colspan: "2" },
-                    content: "Merged",
-                    classes: ['table-cell'],
-                    stylable: true,
-                  },
-                ],
+                    classes: ["solution-td"],
+                    content: "",
+                    droppable: true,
+                    stylable: false,
+                  })),
+                })),
               },
             ],
           },
         ],
       },
-    },
+    ],
+  },
+}
+,
     {
       id: "text-block",
       label: "Text",
@@ -189,28 +198,6 @@ export function addCustomBlocks(editor: any) {
                 tagName: "div",
                 classes: ['col'],
                 content: "Column 2",
-                stylable: true,
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      id: "div-block",
-      label: "Div Block",
-      category: "Layout",
-      content: {
-        type: "default",
-        components: [
-          {
-            tagName: "div",
-            classes: ['custom-div'],
-            stylable: true,
-            components: [
-              {
-                type: "text",
-                content: "Editable content inside div",
                 stylable: true,
               },
             ],
@@ -283,15 +270,38 @@ export function addCustomBlocks(editor: any) {
         'min-height': '50px',
       },
     },
+
     {
-      selectors: ['.custom-div'],
-      style: {
-        padding: '15px',
-        border: '1px solid #ccc',
-        'border-radius': '6px',
-        'min-height': '50px',
-      },
+    selectors: [".solution-table"],
+    style: {
+      margin: '0 auto',
+      width: '90%', 
+      "border-collapse": "collapse",
+      "text-align": "center",
+      "font-family": "Arial, sans-serif",
+      "font-size": "14px",
     },
+  },
+  {
+    selectors: [".solution-th"],
+    style: {
+      border: "1px solid #000",
+      padding: "6px",
+      "font-weight": "bold",
+      "background-color": "#f5f5f5",
+      height: "30px",
+      width: "150px", 
+    },
+  },
+  {
+    selectors: [".solution-td"],
+    style: {
+      border: "1px solid #000",
+      height: "50px", 
+      width: "150px",
+      "min-height": "30px",
+    },
+  },
   ]);
 }
 
