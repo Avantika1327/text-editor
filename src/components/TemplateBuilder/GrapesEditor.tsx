@@ -2,6 +2,12 @@ import { useEffect, useRef } from "react";
 import grapesjs from "grapesjs";
 import "grapesjs/dist/css/grapes.min.css";
 import { addCustomBlocks, addDynamicFields } from "./BlockManager";
+import { useLocation } from "react-router-dom";
+import ReactDOMServer from "react-dom/server";
+
+// React Components
+import HeaderBlock from "./HeaderBlock";
+import FooterBlock from "./FooterBlock";
 
 interface GrapesEditorProps {
   onInit: (editor: any) => void;
@@ -9,13 +15,14 @@ interface GrapesEditorProps {
 
 export default function GrapesEditor({ onInit }: GrapesEditorProps) {
   const editorRef = useRef<any>(null);
+  const location = useLocation();
 
   useEffect(() => {
     if (!editorRef.current) {
       const editor = grapesjs.init({
         container: "#gjs",
-        height: "100%",   // parent full height
-        width: "100%",    // parent full width
+        height: "100%",
+        width: "100%",
         storageManager: false,
         plugins: ["gjs-blocks-basic"],
         blockManager: { appendTo: "#blocks" },
@@ -25,36 +32,49 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
         },
       });
 
-      // Custom blocks & fields
+      // Register custom blocks + dynamic fields
       addCustomBlocks(editor);
       addDynamicFields(editor);
 
-      // Scroll fix
-      const style = document.createElement("style");
-      style.innerHTML = `
-        .gjs-cv-canvas {
-          height: 100% !important;
-          overflow: auto !important;
-          background: #f9f9f9;
+      // Commands to insert header/footer
+      editor.Commands.add("insert-header", {
+        run(ed) {
+          const html = ReactDOMServer.renderToStaticMarkup(<HeaderBlock />);
+          ed.addComponents(html);
+        },
+      });
 
+      editor.Commands.add("insert-footer", {
+        run(ed) {
+          const html = ReactDOMServer.renderToStaticMarkup(<FooterBlock />);
+          ed.addComponents(html);
+        },
+      });
+
+      // Auto insert based on navigation state
+      editor.on("load", () => {
+        if (location.state?.auto === "header") editor.runCommand("insert-header");
+        if (location.state?.auto === "footer") editor.runCommand("insert-footer");
+        if (location.state?.auto === "header-footer") {
+          editor.runCommand("insert-header");
+          editor.runCommand("insert-footer");
         }
-        .gjs-editor {
-          height: 100% !important;
-        }
-        body, html, #gjs {
-          height: 100%;
-        }
-      `;
-      document.head.appendChild(style);
+      });
 
       editorRef.current = editor;
       onInit(editor);
-    }
-  }, [onInit]);
 
-   return (
+      return () => {
+        editor.destroy();
+        editorRef.current = null;
+      };
+    }
+  }, [onInit, location.state]);
+
+  return (
     <div style={{ width: "73%", height: "100vh", border: "1px solid #ddd" }}>
       <div id="gjs" style={{ height: "100%" }} />
+      <div id="blocks" />
     </div>
   );
 }

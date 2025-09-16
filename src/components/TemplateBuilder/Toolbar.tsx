@@ -1,8 +1,7 @@
 interface ToolbarProps {
   onSave: () => void;
-  onPreview: () => void;
+  onPreview?: () => void; // required नाही
 }
-
 export default function Toolbar({ onSave, onPreview }: ToolbarProps) {
   return (
     <div
@@ -11,6 +10,7 @@ export default function Toolbar({ onSave, onPreview }: ToolbarProps) {
         top: "10px",
         right: "10px",
         display: "flex",
+        flexDirection: "column",
         gap: "10px",
       }}
     >
