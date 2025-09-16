@@ -1,8 +1,7 @@
 interface ToolbarProps {
   onSave: () => void;
-  onPreview: () => void;
+  onPreview?: () => void; // required नाही
 }
-
 export default function Toolbar({ onSave, onPreview }: ToolbarProps) {
   return (
     <div

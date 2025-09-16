@@ -1,31 +1,36 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import GrapesEditor from "./GrapesEditor";
 import Toolbar from "./Toolbar";
 import { exportToPdf } from "./PdfUtils";
+import { saveTemplate, getTemplate, generateId } from "../../utils/templateStorage";
+import type { TemplateItem } from "../../utils/templateStorage"; // ✅ type-only import
 
-import {
-  saveTemplate,
-  getTemplate,
-  generateId,
-} from "../../utils/templateStorage";
-import type { TemplateItem } from "../../utils/templateStorage";
 
 export default function TemplateBuilder() {
   const [editor, setEditor] = useState<any>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
+  const [type, setType] = useState<"header" | "footer" | "generic" | undefined>(undefined);
 
   useEffect(() => {
+    // Auto insert based on button click
+    if (location.state?.auto) {
+      setType(location.state.auto as "header" | "footer" | "generic");
+    }
+
+    // Load existing template
     if (id && editor) {
       const template = getTemplate(id);
       if (template) {
         editor.setComponents(template.html);
         editor.setStyle(template.css);
+        setType(template.type || "generic");
       }
     }
-  }, [id, editor]);
+  }, [id, editor, location.state]);
 
 
 useEffect(() => {
@@ -80,6 +85,7 @@ useEffect(() => {
  
   const handleSave = () => {
     if (!editor) return;
+
     const html = editor.getHtml();
     const css = editor.getCss({ withMedia: true });
     const json = editor.getComponents();
@@ -88,6 +94,7 @@ useEffect(() => {
     const template: TemplateItem = {
       id: id || generateId(),
       name: `Template ${id || Date.now()}`,
+      type: type || "generic",
       html,
       css,
       json,
@@ -101,7 +108,6 @@ useEffect(() => {
     navigate("/");
   };
 
-
   const handlePreview = async () => {
     if (!editor) return;
 
@@ -111,44 +117,35 @@ useEffect(() => {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
     if (!iframeDoc) return;
 
-    iframeDoc.querySelectorAll<HTMLSelectElement>("select").forEach((el) => {
-      const value = el.value || "";
+    // Replace inputs, selects, textareas with spans/divs for preview
+    iframeDoc.querySelectorAll("select").forEach(s => {
       const span = document.createElement("span");
       span.style.fontWeight = "bold";
-      span.textContent = value || "(Not Selected)";
-      el.replaceWith(span);
+      span.textContent = (s as HTMLSelectElement).value || "(Not Selected)";
+      s.replaceWith(span);
     });
 
- 
-    iframeDoc.querySelectorAll<HTMLInputElement>("input").forEach((el) => {
-      const value = el.value || el.placeholder || "";
+    iframeDoc.querySelectorAll("input").forEach(i => {
       const span = document.createElement("span");
       span.style.fontWeight = "bold";
-      span.textContent = value;
-      el.replaceWith(span);
+      span.textContent = (i as HTMLInputElement).value || (i as HTMLInputElement).placeholder || "";
+      i.replaceWith(span);
     });
 
-    
-    iframeDoc.querySelectorAll<HTMLTextAreaElement>("textarea").forEach((el) => {
-      const value = el.value || "";
+    iframeDoc.querySelectorAll("textarea").forEach(t => {
       const div = document.createElement("div");
       div.style.fontWeight = "bold";
-      div.textContent = value;
-      el.replaceWith(div);
+      div.textContent = (t as HTMLTextAreaElement).value || "";
+      t.replaceWith(div);
     });
 
-    
-    iframeDoc.querySelectorAll<HTMLImageElement>("img").forEach((imgEl) => {
-      const style = window.getComputedStyle(imgEl);
-      const width = style.width;
-      const height = style.height;
-      imgEl.setAttribute(
-        "style",
-        `width:${width}; height:${height}; object-fit: contain;`
-      );
+    iframeDoc.querySelectorAll("img").forEach(img => {
+      const style = window.getComputedStyle(img);
+      (img as HTMLImageElement).style.width = style.width;
+      (img as HTMLImageElement).style.height = style.height;
+      (img as HTMLImageElement).style.objectFit = "contain";
     });
 
-   
     let finalHtml = iframeDoc.body.innerHTML;
     finalHtml = finalHtml.replace(/{{companyName}}/g, "Avantika Solutions");
     finalHtml = finalHtml.replace(/{{address}}/g, "Mumbai, India");
@@ -170,7 +167,7 @@ useEffect(() => {
           overflowY: "auto",
         }}
       />
-      <GrapesEditor onInit={setEditor} />
+      <GrapesEditor onInit={setEditor}  />
       <Toolbar onSave={handleSave} onPreview={handlePreview} />
     </div>
   );
