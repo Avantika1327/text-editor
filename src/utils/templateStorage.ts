@@ -8,6 +8,7 @@ export interface TemplateItem {
   createdAt: string;
   updatedAt: string;
   archived: boolean;
+  type?: "header" | "footer" | "generic"; // type added
   metadata?: Record<string, string>;
 }
 
@@ -48,15 +49,17 @@ export const getTemplate = (id: string) => {
 export const saveTemplate = (tpl: TemplateItem) => {
   const items = readAll();
   const idx = items.findIndex((t) => t.id === tpl.id);
+  const now = new Date().toISOString();
 
   if (idx >= 0) {
-    items[idx] = { ...tpl, updatedAt: new Date().toISOString() };
+    items[idx] = { ...tpl, updatedAt: now, type: tpl.type || "generic" };
   } else {
     items.push({
       ...tpl,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
       archived: false,
+      type: tpl.type || "generic",
     });
   }
 
@@ -79,45 +82,4 @@ export const setArchive = (id: string, archived: boolean) => {
     items[idx].updatedAt = new Date().toISOString();
     writeAll(items);
   }
-};
-
-// 🔹 Duplicate template
-export const duplicateTemplate = (id: string) => {
-  const tpl = getTemplate(id);
-  if (!tpl) return null;
-
-  const copy: TemplateItem = {
-    ...tpl,
-    id: generateId(),
-    name: tpl.name + " (copy)",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    archived: false,
-  };
-
-  saveTemplate(copy);
-  return copy;
-};
-
-// 🔹 Get summary report
-export const getSummary = () => {
-  const items = getTemplates();
-
-  const total = items.length;
-  const archived = items.filter((t) => t.archived).length;
-  const active = total - archived;
-
-  // Last updated template (latest updatedAt)
-  const lastUpdated = items.length
-    ? items.reduce((latest, tpl) =>
-        tpl.updatedAt > latest.updatedAt ? tpl : latest
-      ).updatedAt
-    : null;
-
-  return {
-    total,
-    active,
-    archived,
-    lastUpdated,
-  };
 };
