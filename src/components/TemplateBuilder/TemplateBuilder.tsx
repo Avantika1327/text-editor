@@ -4,7 +4,7 @@ import GrapesEditor from "./GrapesEditor";
 import Toolbar from "./Toolbar";
 import { exportToPdf } from "./PdfUtils";
 import { saveTemplate, getTemplate, generateId } from "../../utils/templateStorage";
-import type { TemplateItem } from "../../utils/templateStorage"; // ✅ type-only import
+import type { TemplateItem } from "../../utils/templateStorage"; 
 
 
 export default function TemplateBuilder() {
@@ -32,58 +32,7 @@ export default function TemplateBuilder() {
     }
   }, [id, editor, location.state]);
 
-
-useEffect(() => {
-  if (editor) {
-    const meta = JSON.parse(localStorage.getItem("document_meta") || "{}");
-
-    const lockComponent = (cmp: any) => {
-      if (!cmp) return;
-      cmp.set({
-        editable: false,
-        removable: false,
-        copyable: false,
-        draggable: false,
-        highlightable: false,
-      });
-    
-      cmp.get("components").forEach((child: any) => lockComponent(child));
-    };
-
-  
-    if (meta?.header) {
-      const headerTpl = getTemplate(meta.header);
-      if (headerTpl) {
-        const headerComp = editor.addComponents(
-          `<div id="fixed-header">${headerTpl.html}</div>`,
-          { at: 0 }
-        )[0];
-        editor.addStyle(headerTpl.css);
-        lockComponent(headerComp);
-      }
-    }
-
- 
-    if (meta?.footer) {
-      const footerTpl = getTemplate(meta.footer);
-      if (footerTpl) {
-        const footerComp = editor.addComponents(
-          `<div id="fixed-footer">${footerTpl.html}</div>`
-        )[0];
-        editor.addStyle(footerTpl.css);
-        lockComponent(footerComp);
-      }
-    }
-
-   
-    editor.BlockManager.remove("custom-header");
-    editor.BlockManager.remove("custom-footer");
-  }
-}, [editor]);
-
-
- 
-  const handleSave = () => {
+const handleSave = () => {
     if (!editor) return;
 
     const html = editor.getHtml();
@@ -134,7 +83,7 @@ useEffect(() => {
 
     iframeDoc.querySelectorAll("textarea").forEach(t => {
       const div = document.createElement("div");
-      div.style.fontWeight = "bold";
+      div.style.fontWeight = "bold";  
       div.textContent = (t as HTMLTextAreaElement).value || "";
       t.replaceWith(div);
     });

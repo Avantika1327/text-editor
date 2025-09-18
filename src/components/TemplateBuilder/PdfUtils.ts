@@ -14,7 +14,7 @@ export async function exportToPdf(html: string, css: string) {
   container.style.top = "0";
   container.style.left = "50%";
   container.style.transform = "translateX(-50%)";
-  container.style.width = pageWidthPx + "px"; // exactly page width
+  container.style.width = pageWidthPx + "px";
   container.style.backgroundColor = "white";
 
   container.innerHTML = `
@@ -36,8 +36,8 @@ export async function exportToPdf(html: string, css: string) {
 
   document.body.appendChild(container);
 
-  const canvas = await html2canvas(container, { 
-    scale: 2, 
+  const canvas = await html2canvas(container, {
+    scale: 2,
     useCORS: true,
     backgroundColor: "#ffffff"
   });
@@ -50,7 +50,7 @@ export async function exportToPdf(html: string, css: string) {
   const imgWidth = pdfWidth;
   const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-  // X offset काढून image perfect center मध्ये add करा
+
   const xOffset = (pdf.internal.pageSize.getWidth() - imgWidth) / 2;
 
   pdf.addImage(imgData, "PNG", xOffset, 0, imgWidth, imgHeight);

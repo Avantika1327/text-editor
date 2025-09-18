@@ -13,7 +13,6 @@ export function addCustomBlocks(editor: any) {
             stylable: true,
             components: [
               {
-                // tagName: "img",
                 type: "image",
                 attributes: {
                   src: "https://via.placeholder.com/100",
@@ -83,60 +82,60 @@ export function addCustomBlocks(editor: any) {
       },
     },
     {
-  id: "custom-table",
-  label: "Table",
-  category: "Custom",
-  content: {
-    type: "default",
-    components: [
-      {
-        tagName: "div",
-        style: { display: "flex", "justify-content": "center", "margin-top": "20px" },
+      id: "custom-table",
+      label: "Table",
+      category: "Custom",
+      content: {
+        type: "default",
         components: [
           {
-            tagName: "table",
-            classes: ["solution-table"],
-            stylable: false,
+            tagName: "div",
+            style: { display: "flex", "justify-content": "center", "margin-top": "20px" },
             components: [
               {
-                tagName: "thead",
+                tagName: "table",
+                classes: ["solution-table"],
+                stylable: false,
                 components: [
                   {
-                    tagName: "tr",
+                    tagName: "thead",
                     components: [
-                      ...["Date", "Quantity Prepared", "Prepared By", "Supervised By", "Distributed to Departments"].map(
-                        (header) => ({
-                          tagName: "th",
-                          content: header,
-                          classes: ["solution-th"],
-                          stylable: false,
-                        })
-                      ),
+                      {
+                        tagName: "tr",
+                        components: [
+                          ...["Date", "Quantity Prepared", "Prepared By", "Supervised By", "Distributed to Departments"].map(
+                            (header) => ({
+                              tagName: "th",
+                              content: header,
+                              classes: ["solution-th"],
+                              stylable: false,
+                            })
+                          ),
+                        ],
+                      },
                     ],
                   },
+                  {
+                    tagName: "tbody",
+                    components: Array.from({ length: 8 }).map(() => ({
+                      tagName: "tr",
+                      components: Array.from({ length: 5 }).map(() => ({
+                        tagName: "td",
+                        classes: ["solution-td"],
+                        content: "",
+                        droppable: true,
+                        stylable: false,
+                      })),
+                    })),
+                  },
                 ],
-              },
-              {
-                tagName: "tbody",
-                components: Array.from({ length: 8 }).map(() => ({
-                  tagName: "tr",
-                  components: Array.from({ length: 5 }).map(() => ({
-                    tagName: "td",
-                    classes: ["solution-td"],
-                    content: "",
-                    droppable: true,
-                    stylable: false,
-                  })),
-                })),
               },
             ],
           },
         ],
       },
-    ],
-  },
-}
-,
+    }
+    ,
     {
       id: "text-block",
       label: "Text",
@@ -272,36 +271,36 @@ export function addCustomBlocks(editor: any) {
     },
 
     {
-    selectors: [".solution-table"],
-    style: {
-      margin: '0 auto',
-      width: '90%', 
-      "border-collapse": "collapse",
-      "text-align": "center",
-      "font-family": "Arial, sans-serif",
-      "font-size": "14px",
+      selectors: [".solution-table"],
+      style: {
+        margin: '0 auto',
+        width: '90%',
+        "border-collapse": "collapse",
+        "text-align": "center",
+        "font-family": "Arial, sans-serif",
+        "font-size": "14px",
+      },
     },
-  },
-  {
-    selectors: [".solution-th"],
-    style: {
-      border: "1px solid #000",
-      padding: "6px",
-      "font-weight": "bold",
-      "background-color": "#f5f5f5",
-      height: "30px",
-      width: "150px", 
+    {
+      selectors: [".solution-th"],
+      style: {
+        border: "1px solid #000",
+        padding: "6px",
+        "font-weight": "bold",
+        "background-color": "#f5f5f5",
+        height: "30px",
+        width: "150px",
+      },
     },
-  },
-  {
-    selectors: [".solution-td"],
-    style: {
-      border: "1px solid #000",
-      height: "50px", 
-      width: "150px",
-      "min-height": "30px",
+    {
+      selectors: [".solution-td"],
+      style: {
+        border: "1px solid #000",
+        height: "50px",
+        width: "150px",
+        "min-height": "30px",
+      },
     },
-  },
   ]);
 }
 
@@ -435,16 +434,16 @@ export function addDynamicFields(editor: any) {
         <select onchange="window.handleDynamicSelect(this)">
           <option value="">Select ${fieldKey}</option>
           ${values
-            .map((val: any) => {
-              if (fieldKey === "userDetails") {
-                return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
-              }
-              if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
-                return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
-              }
-              return `<option value="${val}">${val}</option>`;
-            })
-            .join("")}
+          .map((val: any) => {
+            if (fieldKey === "userDetails") {
+              return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
+            }
+            if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
+              return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
+            }
+            return `<option value="${val}">${val}</option>`;
+          })
+          .join("")}
         </select>
         <div class="selected-value" style="margin-top:4px;"></div>
       </div>`,
