@@ -4,8 +4,6 @@ import "grapesjs/dist/css/grapes.min.css";
 import { addCustomBlocks, addDynamicFields } from "./BlockManager";
 import { useLocation } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
-
-// React Components
 import HeaderBlock from "./HeaderBlock";
 import FooterBlock from "./FooterBlock";
 
@@ -33,16 +31,17 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
         
       });
 
-      // Register custom blocks + dynamic fields
+
       addCustomBlocks(editor);
       addDynamicFields(editor);
 
-      // Commands to insert header/footer
+
       editor.Commands.add("insert-header", {
         run(ed) {
           const html = ReactDOMServer.renderToStaticMarkup(<HeaderBlock />);
           ed.addComponents(html);
         },
+        
       });
 
       editor.Commands.add("insert-footer", {
@@ -52,7 +51,7 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
         },
       });
 
-      // Auto insert based on navigation state
+
       editor.on("load", () => {
         if (location.state?.auto === "header") editor.runCommand("insert-header");
         if (location.state?.auto === "footer") editor.runCommand("insert-footer");

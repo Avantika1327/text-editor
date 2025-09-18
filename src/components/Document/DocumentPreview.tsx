@@ -1,18 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getTemplate } from "../../utils/templateStorage";
+import { getDocument } from "../../utils/documentStorage";
 
-export default function TemplatePreview() {
+export default function DocumentPreview() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  if (!id) return <div className="p-6 text-red-500"> Invalid template ID</div>;
+  if (!id) return <div className="p-6 text-red-500"> Invalid Document ID</div>;
 
-  const template = getTemplate(id);
+  const Document = getDocument(id);
 
-  if (!template) {
+  if (!Document) {
     return (
       <div className="p-6 text-center text-gray-500">
-        <h2 className="text-xl font-semibold">Template</h2>
+        <h2 className="text-xl font-semibold">Document</h2>
         <button
           className="mt-4 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700"
           onClick={() => navigate("/")}
@@ -27,9 +27,7 @@ export default function TemplatePreview() {
     <div className="min-h-screen bg-gray-100 p-6">
 
       <div className="flex items-center justify-between mb-6 border-b pb-3">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Preview: <span className="text-blue-600">{template.name}</span>
-        </h2>
+      
         <button
           onClick={() => navigate("/")}
           className="px-4 py-2 text-sm font-medium bg-gray-700 text-white rounded hover:bg-gray-800"
@@ -50,7 +48,7 @@ export default function TemplatePreview() {
           }}
         >
 
-          <style>{template.css}</style>
+          <style>{Document.css}</style>
 
 
           <style>
@@ -84,7 +82,7 @@ export default function TemplatePreview() {
 
           <div
             className="preview-body"
-            dangerouslySetInnerHTML={{ __html: template.html }}
+            dangerouslySetInnerHTML={{ __html: Document.html }}
           />
         </div>
       </div>

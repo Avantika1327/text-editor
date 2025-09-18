@@ -4,19 +4,18 @@ import {
   getTemplates,
   deleteTemplate,
   setArchive,
-} from "../../utils/templateStorage"; 
+} from "../../utils/templateStorage";
 import type { TemplateItem as TItem } from "../../utils/templateStorage";
 
-// Icons
+
 import { FaEdit, FaTrash, FaEye, FaArchive, FaBoxOpen } from "react-icons/fa";
 
 export default function TemplateList() {
   const navigate = useNavigate();
   const [templates, setTemplates] = useState<TItem[]>([]);
   const [query, setQuery] = useState("");
-  
-  const [showArchived, setShowArchived] = useState(false); // ✅ show/hide archived
 
+  const [showArchived, setShowArchived] = useState(false);
   const refresh = () => setTemplates(getTemplates());
 
   useEffect(() => {
@@ -35,7 +34,7 @@ export default function TemplateList() {
   };
 
   const filtered = templates.filter((t) => {
-    if (!showArchived && t.archived) return false; // hide archived
+    if (!showArchived && t.archived) return false;
     return t.name.toLowerCase().includes(query.toLowerCase());
   });
 
@@ -62,7 +61,7 @@ export default function TemplateList() {
         </div>
       </div>
 
-      {/* Search + Show Archived */}
+
       <div className="d-flex align-items-center mb-3 gap-3">
         <input
           type="text"
@@ -110,13 +109,12 @@ export default function TemplateList() {
                 <td>{t.name}</td>
                 <td>
                   <span
-                    className={`badge ${
-                      t.type === "header"
-                        ? "bg-success"
-                        : t.type === "footer"
+                    className={`badge ${t.type === "header"
+                      ? "bg-success"
+                      : t.type === "footer"
                         ? "bg-info"
                         : "bg-secondary"
-                    }`}
+                      }`}
                   >
                     {t.type ? t.type.charAt(0).toUpperCase() + t.type.slice(1) : "Generic"}
                   </span>
@@ -133,20 +131,19 @@ export default function TemplateList() {
                     className="btn btn-sm btn-warning"
                     onClick={() => navigate(`/builder/${t.id}`)}
                   >
-                    <FaEdit /> 
+                    <FaEdit />
                   </button>
 
                   <button
                     className="btn btn-sm btn-info text-white"
                     onClick={() => navigate(`/preview/${t.id}`)}
                   >
-                    <FaEye /> 
+                    <FaEye />
                   </button>
 
                   <button
-                    className={`btn btn-sm d-flex align-items-center ${
-                      t.archived ? "btn-secondary" : "btn-outline-secondary"
-                    }`}
+                    className={`btn btn-sm d-flex align-items-center ${t.archived ? "btn-secondary" : "btn-outline-secondary"
+                      }`}
                     onClick={() => onArchiveToggle(t.id, t.archived)}
                   >
                     {t.archived ? <FaBoxOpen className="me-1" /> : <FaArchive className="me-1" />}
@@ -157,7 +154,7 @@ export default function TemplateList() {
                     className="btn btn-sm btn-danger"
                     onClick={() => onDelete(t.id)}
                   >
-                    <FaTrash /> 
+                    <FaTrash />
                   </button>
                 </td>
               </tr>
