@@ -28,8 +28,9 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
         blockManager: { appendTo: "#blocks" },
         canvas: { styles: [], scripts: [] },
         deviceManager: {
-          devices: [{ name: "A4", width: "210mm", height: "297mm" }],
+          devices: [{ name: "A4", width: "210mm", height: "297mm", }],
         },
+        
       });
 
       // Register custom blocks + dynamic fields
@@ -72,9 +73,17 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
   }, [onInit, location.state]);
 
   return (
-    <div style={{ width: "73%", height: "100vh", border: "1px solid #ddd" }}>
-      <div id="gjs" style={{ height: "100%" }} />
-      <div id="blocks" />
-    </div>
-  );
+  <div
+    style={{
+      width: "73%",
+      height: "100vh",
+      border: "1px solid #ddd",
+      
+    }}
+  >
+    <div id="gjs" style={{ minHeight: "100%", width: "100%" , }} />
+    <div id="blocks" />
+  </div>
+);
+
 }
