@@ -4,7 +4,7 @@ import GrapesEditor from "./GrapesEditor";
 import Toolbar from "./Toolbar";
 import { exportToPdf } from "./PdfUtils";
 import { saveTemplate, getTemplate, generateId } from "../../utils/templateStorage";
-import type { TemplateItem } from "../../utils/templateStorage"; // ✅ type-only import
+import type { TemplateItem } from "../../utils/templateStorage"; 
 
 
 export default function TemplateBuilder() {
@@ -32,7 +32,7 @@ export default function TemplateBuilder() {
     }
   }, [id, editor, location.state]);
 
-  const handleSave = () => {
+const handleSave = () => {
     if (!editor) return;
 
     const html = editor.getHtml();
@@ -83,7 +83,7 @@ export default function TemplateBuilder() {
 
     iframeDoc.querySelectorAll("textarea").forEach(t => {
       const div = document.createElement("div");
-      div.style.fontWeight = "bold";
+      div.style.fontWeight = "bold";  
       div.textContent = (t as HTMLTextAreaElement).value || "";
       t.replaceWith(div);
     });

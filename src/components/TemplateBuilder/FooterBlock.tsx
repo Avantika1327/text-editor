@@ -8,7 +8,6 @@ export default function FooterBlock() {
         borderTop: "1px solid #ccc",
       }}
     >
-      {/* placeholders as text, not JSX curly braces */}
       <p>© {"{{year}}"} {"{{companyName}}"} Pvt Ltd. All rights reserved.</p>
     </footer>
   );

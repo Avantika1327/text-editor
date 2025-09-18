@@ -89,37 +89,44 @@ export function addCustomBlocks(editor: any) {
         type: "default",
         components: [
           {
-            tagName: "table",
-            classes: ['custom-table'],
-            stylable: true,
+            tagName: "div",
+            style: { display: "flex", "justify-content": "center", "margin-top": "20px" },
             components: [
               {
-                tagName: "tr",
-                components: [
-                  ...["Col 1", "Col 2", "Col 3", "Col 4"].map((col) => ({
-                    tagName: "td",
-                    content: col,
-                    classes: ['table-cell'],
-                    stylable: true,
-                  })),
-                ],
-              },
-              {
-                tagName: "tr",
+                tagName: "table",
+                classes: ["solution-table"],
+                stylable: false,
                 components: [
                   {
-                    tagName: "td",
-                    attributes: { colspan: "2" },
-                    content: "Merged",
-                    classes: ['table-cell'],
-                    stylable: true,
+                    tagName: "thead",
+                    components: [
+                      {
+                        tagName: "tr",
+                        components: [
+                          ...["Date", "Quantity Prepared", "Prepared By", "Supervised By", "Distributed to Departments"].map(
+                            (header) => ({
+                              tagName: "th",
+                              content: header,
+                              classes: ["solution-th"],
+                              stylable: false,
+                            })
+                          ),
+                        ],
+                      },
+                    ],
                   },
                   {
-                    tagName: "td",
-                    attributes: { colspan: "2" },
-                    content: "Merged",
-                    classes: ['table-cell'],
-                    stylable: true,
+                    tagName: "tbody",
+                    components: Array.from({ length: 8 }).map(() => ({
+                      tagName: "tr",
+                      components: Array.from({ length: 5 }).map(() => ({
+                        tagName: "td",
+                        classes: ["solution-td"],
+                        content: "",
+                        droppable: true,
+                        stylable: false,
+                      })),
+                    })),
                   },
                 ],
               },
@@ -127,7 +134,8 @@ export function addCustomBlocks(editor: any) {
           },
         ],
       },
-    },
+    }
+    ,
     {
       id: "text-block",
       label: "Text",
@@ -189,28 +197,6 @@ export function addCustomBlocks(editor: any) {
                 tagName: "div",
                 classes: ['col'],
                 content: "Column 2",
-                stylable: true,
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      id: "div-block",
-      label: "Div Block",
-      category: "Layout",
-      content: {
-        type: "default",
-        components: [
-          {
-            tagName: "div",
-            classes: ['custom-div'],
-            stylable: true,
-            components: [
-              {
-                type: "text",
-                content: "Editable content inside div",
                 stylable: true,
               },
             ],
@@ -283,13 +269,36 @@ export function addCustomBlocks(editor: any) {
         'min-height': '50px',
       },
     },
+
     {
-      selectors: ['.custom-div'],
+      selectors: [".solution-table"],
       style: {
-        padding: '15px',
-        border: '1px solid #ccc',
-        'border-radius': '6px',
-        'min-height': '50px',
+        margin: '0 auto',
+        width: '90%',
+        "border-collapse": "collapse",
+        "text-align": "center",
+        "font-family": "Arial, sans-serif",
+        "font-size": "14px",
+      },
+    },
+    {
+      selectors: [".solution-th"],
+      style: {
+        border: "1px solid #000",
+        padding: "6px",
+        "font-weight": "bold",
+        "background-color": "#f5f5f5",
+        height: "30px",
+        width: "150px",
+      },
+    },
+    {
+      selectors: [".solution-td"],
+      style: {
+        border: "1px solid #000",
+        height: "50px",
+        width: "150px",
+        "min-height": "30px",
       },
     },
   ]);
@@ -425,16 +434,16 @@ export function addDynamicFields(editor: any) {
         <select onchange="window.handleDynamicSelect(this)">
           <option value="">Select ${fieldKey}</option>
           ${values
-            .map((val: any) => {
-              if (fieldKey === "userDetails") {
-                return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
-              }
-              if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
-                return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
-              }
-              return `<option value="${val}">${val}</option>`;
-            })
-            .join("")}
+          .map((val: any) => {
+            if (fieldKey === "userDetails") {
+              return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
+            }
+            if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
+              return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
+            }
+            return `<option value="${val}">${val}</option>`;
+          })
+          .join("")}
         </select>
         <div class="selected-value" style="margin-top:4px;"></div>
       </div>`,
