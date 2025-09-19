@@ -8,6 +8,8 @@ export interface DocumentItem {
   createdAt: string;
   updatedAt: string;
   applyBy?: string | null;
+
+  
 }
 
 const KEY = "documents_v1";
