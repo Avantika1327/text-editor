@@ -6,33 +6,32 @@ import { exportToPdf } from "./PdfUtils";
 import { saveTemplate, getTemplate, generateId } from "../../utils/templateStorage";
 import type { TemplateItem } from "../../utils/templateStorage"; 
 
-
 export default function TemplateBuilder() {
   const [editor, setEditor] = useState<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-
   const [type, setType] = useState<"header" | "footer" | "generic" | undefined>(undefined);
+  const [templateName, setTemplateName] = useState<string>("");
 
+  // Load template if editing
   useEffect(() => {
-    // Auto insert based on button click
     if (location.state?.auto) {
       setType(location.state.auto as "header" | "footer" | "generic");
     }
-
-    // Load existing template
     if (id && editor) {
       const template = getTemplate(id);
       if (template) {
         editor.setComponents(template.html);
         editor.setStyle(template.css);
         setType(template.type || "generic");
+        setTemplateName(template.name); // ✅ old name load
       }
     }
   }, [id, editor, location.state]);
 
-const handleSave = () => {
+  // Save handler
+  const handleSave = (name: string, saveType: "normal" | "draft" | "archive") => {
     if (!editor) return;
 
     const html = editor.getHtml();
@@ -42,14 +41,15 @@ const handleSave = () => {
 
     const template: TemplateItem = {
       id: id || generateId(),
-      name: `Template ${id || Date.now()}`,
+      name: name && name.trim() ? name : `Template ${id || Date.now()}`, // ✅ from Toolbar
       type: type || "generic",
       html,
       css,
       json,
-      createdAt: now,
+      createdAt: id ? getTemplate(id)?.createdAt || now : now,
       updatedAt: now,
-      archived: false,
+      archived: saveType === "archive",
+      metadata: { status: saveType === "draft" ? "draft" : "normal" },
     };
 
     saveTemplate(template);
@@ -57,42 +57,33 @@ const handleSave = () => {
     navigate("/");
   };
 
+  // Preview
   const handlePreview = async () => {
     if (!editor) return;
-
     const css = editor.getCss({ withMedia: true });
     const iframe = document.querySelector<HTMLIFrameElement>(".gjs-frame");
     if (!iframe) return;
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
     if (!iframeDoc) return;
 
-    // Replace inputs, selects, textareas with spans/divs for preview
+    // Replace form elements for preview
     iframeDoc.querySelectorAll("select").forEach(s => {
       const span = document.createElement("span");
       span.style.fontWeight = "bold";
       span.textContent = (s as HTMLSelectElement).value || "(Not Selected)";
       s.replaceWith(span);
     });
-
     iframeDoc.querySelectorAll("input").forEach(i => {
       const span = document.createElement("span");
       span.style.fontWeight = "bold";
       span.textContent = (i as HTMLInputElement).value || (i as HTMLInputElement).placeholder || "";
       i.replaceWith(span);
     });
-
     iframeDoc.querySelectorAll("textarea").forEach(t => {
       const div = document.createElement("div");
       div.style.fontWeight = "bold";  
       div.textContent = (t as HTMLTextAreaElement).value || "";
       t.replaceWith(div);
-    });
-
-    iframeDoc.querySelectorAll("img").forEach(img => {
-      const style = window.getComputedStyle(img);
-      (img as HTMLImageElement).style.width = style.width;
-      (img as HTMLImageElement).style.height = style.height;
-      (img as HTMLImageElement).style.objectFit = "contain";
     });
 
     let finalHtml = iframeDoc.body.innerHTML;
@@ -107,17 +98,14 @@ const handleSave = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-      <div
-        id="blocks"
-        style={{
-          width: "250px",
-          background: "#f7f7f7",
-          padding: "10px",
-          overflowY: "auto",
-        }}
-      />
-      <GrapesEditor onInit={setEditor}  />
-      <Toolbar onSave={handleSave} onPreview={handlePreview} />
+      {/* Sidebar */}
+      <div id="blocks" style={{ width: "205px", background: "#f7f7f7", padding: 10, overflowY: "auto" }} />
+
+      {/* Editor */}
+      <GrapesEditor onInit={setEditor} />
+
+      {/* Toolbar with save + preview */}
+      <Toolbar onSave={handleSave} onPreview={handlePreview} initialName={templateName} />
     </div>
   );
 }

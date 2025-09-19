@@ -5,6 +5,7 @@ export interface DocumentItem {
   html: string;
   css: string;
   archived: boolean;
+  draft: boolean;
   createdAt: string;
   updatedAt: string;
   applyBy?: string | null;
@@ -12,7 +13,7 @@ export interface DocumentItem {
 
 const KEY = "documents_v1";
 
-function readAll(): DocumentItem[] {
+export function readAll(): DocumentItem[] {
   try {
     return JSON.parse(localStorage.getItem(KEY) || "[]");
   } catch {
@@ -55,7 +56,6 @@ export function listDocuments(includeArchived = false) {
   const all = readAll();
   return includeArchived ? all : all.filter(d => !d.archived);
 }
-
 
 export function toggleArchiveDocument(id: string) {
   const all = readAll();

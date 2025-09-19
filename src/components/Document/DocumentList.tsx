@@ -4,21 +4,40 @@ import {
   listDocuments,
   deleteDocument,
   toggleArchiveDocument,
+  readAll,   // ✅ हे नवीन
 } from "../../utils/documentStorage";
 
 import { FaEdit, FaTrash, FaEye, FaArchive, FaBoxOpen } from "react-icons/fa";
 
+type TabType = "all" | "draft" | "archive";
+
 export default function DocumentList() {
   const [docs, setDocs] = useState<any[]>([]);
   const [query, setQuery] = useState("");
-  const [showArchived, setShowArchived] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>("all");
   const navigate = useNavigate();
 
-  const refresh = () => setDocs(listDocuments(showArchived));
+  // Load documents based on active tab
+  const refresh = () => {
+  let documents: any[] = readAll();
+
+  if (activeTab === "all") {
+    // फक्त final documents (draft = false && archived = false)
+    documents = documents.filter((d) => !d.draft && !d.archived);
+  } else if (activeTab === "draft") {
+    // फक्त draft documents
+    documents = documents.filter((d) => d.draft && !d.archived);
+  } else if (activeTab === "archive") {
+    // फक्त archived
+    documents = documents.filter((d) => d.archived);
+  }
+
+  setDocs(documents);
+};
 
   useEffect(() => {
     refresh();
-  }, [showArchived]); 
+  }, [activeTab]);
 
   const onDelete = (id: string) => {
     if (!window.confirm("Delete this document?")) return;
@@ -31,6 +50,7 @@ export default function DocumentList() {
     refresh();
   };
 
+  // Filter documents by search query
   const filtered = docs.filter((d) =>
     d.meta.documentName?.toLowerCase().includes(query.toLowerCase())
   );
@@ -38,7 +58,7 @@ export default function DocumentList() {
   return (
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="mb-0"> Documents</h2>
+        <h2 className="mb-0">Documents</h2>
         <button
           className="btn btn-primary"
           onClick={() => navigate("/document")}
@@ -46,6 +66,34 @@ export default function DocumentList() {
           + New Document
         </button>
       </div>
+
+      {/* Tabs */}
+      <ul className="nav nav-tabs mb-3">
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => setActiveTab("all")}
+          >
+            All
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "draft" ? "active" : ""}`}
+            onClick={() => setActiveTab("draft")}
+          >
+            Draft
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "archive" ? "active" : ""}`}
+            onClick={() => setActiveTab("archive")}
+          >
+            Archive
+          </button>
+        </li>
+      </ul>
 
       <div className="d-flex align-items-center mb-3 gap-3">
         <input
@@ -55,18 +103,6 @@ export default function DocumentList() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <div className="form-check">
-          <input
-            type="checkbox"
-            id="showArchived"
-            className="form-check-input"
-            checked={showArchived}
-            onChange={(e) => setShowArchived(e.target.checked)}
-          />
-          <label className="form-check-label" htmlFor="showArchived">
-            Show Archived
-          </label>
-        </div>
       </div>
 
       <div className="table-responsive shadow-sm">
@@ -95,8 +131,9 @@ export default function DocumentList() {
                 <td>{new Date(d.createdAt).toLocaleString()}</td>
                 <td>
                   <span
-                    className={`badge ${d.archived ? "bg-danger" : "bg-success"
-                      }`}
+                    className={`badge ${
+                      d.archived ? "bg-danger" : "bg-success"
+                    }`}
                   >
                     {d.archived ? "Yes" : "No"}
                   </span>
@@ -120,10 +157,10 @@ export default function DocumentList() {
                     <FaEye />
                   </button>
 
-
                   <button
-                    className={`btn btn-sm d-flex align-items-center ${d.archived ? "btn-secondary" : "btn-outline-secondary"
-                      }`}
+                    className={`btn btn-sm d-flex align-items-center ${
+                      d.archived ? "btn-secondary" : "btn-outline-secondary"
+                    }`}
                     onClick={() => onArchiveToggle(d.id)}
                   >
                     {d.archived ? (
