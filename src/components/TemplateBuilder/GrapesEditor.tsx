@@ -9,9 +9,10 @@ import FooterBlock from "./FooterBlock";
 
 interface GrapesEditorProps {
   onInit: (editor: any) => void;
+   docData?: any;  
 }
 
-export default function GrapesEditor({ onInit }: GrapesEditorProps) {
+export default function GrapesEditor({ onInit, docData }: GrapesEditorProps) {
   const editorRef = useRef<any>(null);
   const location = useLocation();
 
@@ -32,7 +33,7 @@ export default function GrapesEditor({ onInit }: GrapesEditorProps) {
 
 
       addCustomBlocks(editor);
-      addDynamicFields(editor);
+      addDynamicFields(editor, docData);
 
 
       editor.Commands.add("insert-header", {

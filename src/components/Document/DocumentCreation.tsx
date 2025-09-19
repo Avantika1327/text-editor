@@ -23,7 +23,9 @@ export default function DocumentCreation() {
   const [departmentId, setDepartmentId] = useState("");
   const [category, setCategory] = useState("SOP");
   const [documentName, setDocumentName] = useState("");
-
+  const [issuedNo, setIssuedNo] = useState(""); 
+  const [amendmentNo, setAmendmentNo] = useState("");   
+  const [copyNo, setCopyNo] = useState("");     
   const [headerEnabled, setHeaderEnabled] = useState(true);
   const [footerEnabled, setFooterEnabled] = useState(true);
 
@@ -55,6 +57,9 @@ export default function DocumentCreation() {
         departmentId,
         category,
         documentName,
+        issuedNo,
+        amendmentNo,
+        copyNo,    
         header: headerEnabled ? selectedHeader : null,
         footer: footerEnabled ? selectedFooter : null,
         dateValue,
@@ -101,8 +106,12 @@ export default function DocumentCreation() {
           </select>
         </div>
         <Input label="Document Name" value={documentName} onChange={setDocumentName} />
+        <Input label="Issued No" value={issuedNo} onChange={setIssuedNo} /> 
+        <Input label="Amendment No" value={amendmentNo} onChange={setAmendmentNo} /> 
+        <Input label="Copy No" value={copyNo} onChange={setCopyNo} />    
       </div>
 
+     
       <Card title="Header Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={headerEnabled} onChange={(e) => setHeaderEnabled(e.target.checked)} />
@@ -125,6 +134,7 @@ export default function DocumentCreation() {
         )}
       </Card>
 
+      {/* Footer Settings */}
       <Card title="Footer Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={footerEnabled} onChange={(e) => setFooterEnabled(e.target.checked)} />

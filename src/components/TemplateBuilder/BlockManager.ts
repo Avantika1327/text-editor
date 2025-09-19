@@ -305,7 +305,7 @@ export function addCustomBlocks(editor: any) {
 }
 
 
-export function addDynamicFields(editor: any) {
+export function addDynamicFields(editor: any, docMeta?: any) {
   const dynamicData = {
     date: "2025-09-12",
     username: [
@@ -402,8 +402,33 @@ export function addDynamicFields(editor: any) {
       "Validated On": "2025-09-12 03:30 PM",
       "Issued On": "2025-09-12 04:00 PM",
       "Effective On": "2025-09-13 09:00 AM"
-    }
+    },
+        issuedNo: docMeta?.issuedNo || "N/A",
+    copyNo: docMeta?.copyNo || "N/A",
+    amendmentNo: docMeta?.amendmentNo || "N/A",
   };
+
+
+    // Issued No
+  editor.BlockManager.add("field-issuedNo", {
+    label: "Issued No",
+    category: "Dynamic Fields",
+    content: `<span class="dynamic-field" data-field="issuedNo">${dynamicData.issuedNo}</span>`,
+  });
+
+  // Copy No
+  editor.BlockManager.add("field-copyNo", {
+    label: "Copy No",
+    category: "Dynamic Fields",
+    content: `<span class="dynamic-field" data-field="copyNo">${dynamicData.copyNo}</span>`,
+  });
+
+  // Amendment No
+  editor.BlockManager.add("field-amendmentNo", {
+    label: "Amendment No",
+    category: "Dynamic Fields",
+    content: `<span class="dynamic-field" data-field="amendmentNo">${dynamicData.amendmentNo}</span>`,
+  });
 
   const fields = [
     "username",
