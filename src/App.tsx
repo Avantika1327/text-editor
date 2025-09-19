@@ -16,6 +16,7 @@ export default function App() {
       <Route path="/preview/:id" element={<TemplatePreview />} />
       <Route path="/document" element={<DocumentCreation />} />
       <Route path="/document-editor" element={<DocumentEditor />} />
+      <Route path="/document-editor/:id" element={<DocumentEditor />} />
       <Route path="/document-list" element={<DocumentList />} />
       <Route path="/docpreview/:id" element={<DocumentPreview />} />
 

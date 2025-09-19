@@ -1,22 +1,36 @@
+// src/pages/documents/DocumentEditor.tsx
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import GrapesEditor from "../TemplateBuilder/GrapesEditor";
 import Toolbar from "../TemplateBuilder/Toolbar";
 import { getTemplate } from "../../utils/templateStorage";
 import { getDocument, updateDocument } from "../../utils/documentStorage";
 
 export default function DocumentEditor() {
+  const { id } = useParams<{ id: string }>(); // id is string | undefined
+  const navigate = useNavigate();
+
   const [editor, setEditor] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [applyByChecked, setApplyByChecked] = useState(false);
   const [applyDate, setApplyDate] = useState("");
-  const location = useLocation();
-  const navigate = useNavigate();
-  const docId = location.state?.documentId;
+
+  const metaDoc = id ? getDocument(id) : null;
+  const isEditing = !!metaDoc; // true if editing an existing document
+
+  // Redirect if id is missing
+  useEffect(() => {
+    if (!id) navigate("/document-list");
+  }, [id, navigate]);
 
   useEffect(() => {
-    const metaDoc = getDocument(docId);
-    if (!metaDoc || !editor) return;
+    if (!editor || !id || !metaDoc) return;
+
+    // Pre-fill applyBy only if it exists in saved doc
+    if (metaDoc.applyBy) {
+      setApplyByChecked(true);
+      setApplyDate(metaDoc.applyBy);
+    }
 
     const meta = metaDoc.meta;
 
@@ -62,16 +76,22 @@ export default function DocumentEditor() {
       editor.setComponents(metaDoc.html);
       editor.setStyle(metaDoc.css);
     }
-  }, [editor, docId]);
+  }, [editor, id, metaDoc]);
 
   const handleSaveClick = () => {
-    setShowAlert(true);
+    if (isEditing) {
+      // If editing existing document, save directly
+      handleConfirmSave();
+    } else {
+      // If new document, show Apply By alert
+      setShowAlert(true);
+    }
   };
 
   const handleConfirmSave = () => {
-    if (!editor || !docId) return;
+    if (!editor || !id) return;
 
-    updateDocument(docId, {
+    updateDocument(id, {
       html: editor.getHtml(),
       css: editor.getCss(),
       applyBy: applyByChecked ? applyDate : null,
@@ -93,10 +113,10 @@ export default function DocumentEditor() {
           overflowY: "auto",
         }}
       />
-      <GrapesEditor onInit={setEditor} />
+      <GrapesEditor onInit={setEditor} docData={metaDoc?.meta} />
       <Toolbar onSave={handleSaveClick} />
 
-      {showAlert && (
+      {!isEditing && showAlert && (
         <div
           style={{
             position: "fixed",
@@ -133,7 +153,10 @@ export default function DocumentEditor() {
             </div>
           )}
           <div style={{ textAlign: "right" }}>
-            <button onClick={() => setShowAlert(false)} style={{ marginRight: 10 }}>
+            <button
+              onClick={() => setShowAlert(false)}
+              style={{ marginRight: 10 }}
+            >
               Cancel
             </button>
             <button onClick={handleConfirmSave}>Save</button>
