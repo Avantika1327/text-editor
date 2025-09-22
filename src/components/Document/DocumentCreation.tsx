@@ -46,7 +46,7 @@ export default function DocumentCreation() {
   }, []);
 
   const handleSave = () => {
-    const payload = {
+    const payload   = {
       id: uuidv4(),
       meta: {
         labName,
@@ -70,6 +70,8 @@ export default function DocumentCreation() {
       html: "",
       css: "",
       archived: false,
+      draft: true,
+      applyBy: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

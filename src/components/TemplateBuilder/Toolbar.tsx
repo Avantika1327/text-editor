@@ -158,9 +158,9 @@ export default function Toolbar({ onSave, onPreview, initialName }: ToolbarProps
             <button
               style={{
                 padding: "12px 16px",
-                color: "white",
+                color: "black",
                 borderRadius: 8,
-                background: "#16a34a",
+                // background: "#16a34a",
                 border: "none",
                 fontWeight: 500,
                 fontSize: "14px",
@@ -174,9 +174,9 @@ export default function Toolbar({ onSave, onPreview, initialName }: ToolbarProps
             <button
               style={{
                 padding: "12px 16px",
-                color: "white",
+                color: "black",
                 borderRadius: 8,
-                background: "#f59e0b",
+                // background: "#f59e0b",
                 border: "none",
                 fontWeight: 500,
                 fontSize: "14px",
