@@ -111,7 +111,6 @@ export default function DocumentCreation() {
         <Input label="Copy No" value={copyNo} onChange={setCopyNo} />    
       </div>
 
-     
       <Card title="Header Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={headerEnabled} onChange={(e) => setHeaderEnabled(e.target.checked)} />
@@ -134,7 +133,6 @@ export default function DocumentCreation() {
         )}
       </Card>
 
-      {/* Footer Settings */}
       <Card title="Footer Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={footerEnabled} onChange={(e) => setFooterEnabled(e.target.checked)} />

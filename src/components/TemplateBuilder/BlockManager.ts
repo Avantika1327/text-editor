@@ -409,21 +409,21 @@ export function addDynamicFields(editor: any, docMeta?: any) {
   };
 
 
-    // Issued No
+   
   editor.BlockManager.add("field-issuedNo", {
     label: "Issued No",
     category: "Dynamic Fields",
     content: `<span class="dynamic-field" data-field="issuedNo">${dynamicData.issuedNo}</span>`,
   });
 
-  // Copy No
+  
   editor.BlockManager.add("field-copyNo", {
     label: "Copy No",
     category: "Dynamic Fields",
     content: `<span class="dynamic-field" data-field="copyNo">${dynamicData.copyNo}</span>`,
   });
 
-  // Amendment No
+  
   editor.BlockManager.add("field-amendmentNo", {
     label: "Amendment No",
     category: "Dynamic Fields",
@@ -445,7 +445,7 @@ export function addDynamicFields(editor: any, docMeta?: any) {
   fields.forEach((fieldKey) => {
     let values: any[] = [];
 
-    // Object fields (signatoryBy, signatoryOn) convert to array
+   
     if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
       values = Object.entries(dynamicData[fieldKey]).map(([key, val]) => ({ key, value: val }));
     } else {
