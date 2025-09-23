@@ -296,6 +296,7 @@ export default function DocumentList() {
                   >
                     <FaEdit />
                   </button>
+
                   <button
                     className="btn btn-sm btn-info text-white"
                     onClick={() => navigate(`/docpreview/${d.id}`)}
