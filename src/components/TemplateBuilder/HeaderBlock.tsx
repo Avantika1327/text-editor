@@ -1,3 +1,4 @@
+// HeaderBlock.tsx
 export default function HeaderBlock() {
   return (
     <header
@@ -10,9 +11,10 @@ export default function HeaderBlock() {
         borderBottom: "1px solid #ccc",
         width: "100%",
         boxSizing: "border-box",
+        
       }}
     >
-     
+      {/* Logo on left */}
       <div style={{ flex: "0 0 auto" }}>
         <img
           src="https://via.placeholder.com/120x60?text=Logo"
@@ -21,7 +23,7 @@ export default function HeaderBlock() {
         />
       </div>
 
-     
+      {/* Company details on right */}
       <div style={{ flex: "1 1 auto", textAlign: "right" }}>
         <h2 style={{ margin: 0, fontSize: "18px" }}>{"{{companyName}}"}</h2>
         <p style={{ margin: "2px 0", fontSize: "14px" }}>{"{{address}}"}</p>

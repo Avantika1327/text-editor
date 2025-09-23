@@ -7,12 +7,11 @@ export interface TemplateItem {
   createdAt: string;
   updatedAt: string;
   archived: boolean;
-  type?: "header" | "footer" | "generic"; 
+  type?: "header" | "footer" | "generic";
   metadata?: Record<string, string>;
 }
 
 const KEY = "grapes_templates_v1";
-  
 
 const readAll = (): TemplateItem[] => {
   try {
@@ -28,20 +27,16 @@ const writeAll = (items: TemplateItem[]) => {
   localStorage.setItem(KEY, JSON.stringify(items));
 };
 
-
 export const generateId = () =>
   `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
-
 
 export const getTemplates = (): TemplateItem[] => {
   return readAll().sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
 };
 
-
 export const getTemplate = (id: string) => {
   return readAll().find((t) => t.id === id) || null;
 };
-
 
 export const saveTemplate = (tpl: TemplateItem) => {
   const items = readAll();
@@ -55,15 +50,15 @@ export const saveTemplate = (tpl: TemplateItem) => {
       ...tpl,
       createdAt: now,
       updatedAt: now,
-      archived: false,
+      archived: tpl.archived || false,
       type: tpl.type || "generic",
+      metadata: tpl.metadata || { status: "normal" },
     });
   }
 
   writeAll(items);
   return tpl;
 };
-
 
 export const deleteTemplate = (id: string) => {
   const items = readAll().filter((t) => t.id !== id);

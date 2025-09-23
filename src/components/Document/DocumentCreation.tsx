@@ -53,7 +53,7 @@ export default function DocumentCreation() {
   }, []);
 
   const handleSave = () => {
-    const payload = {
+    const payload   = {
       id: uuidv4(),
       meta: {
         labName,
@@ -84,6 +84,8 @@ export default function DocumentCreation() {
       html: "",
       css: "",
       archived: false,
+      draft: true,
+      applyBy: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -125,6 +127,7 @@ export default function DocumentCreation() {
         <Input label="Copy No" value={copyNo} onChange={setCopyNo} />    
       </div>
 
+     
       <Card title="Header Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={headerEnabled} onChange={(e) => setHeaderEnabled(e.target.checked)} />
@@ -147,6 +150,7 @@ export default function DocumentCreation() {
         )}
       </Card>
 
+      {/* Footer Settings */}
       <Card title="Footer Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={footerEnabled} onChange={(e) => setFooterEnabled(e.target.checked)} />

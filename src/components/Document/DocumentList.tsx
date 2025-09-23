@@ -4,76 +4,91 @@ import {
   listDocuments,
   deleteDocument,
   toggleArchiveDocument,
+  readAll,
 } from "../../utils/documentStorage";
 
 import { FaEdit, FaTrash, FaEye, FaArchive, FaBoxOpen } from "react-icons/fa";
 
+type TabType = "all" | "draft" | "archive";
+
 const labsData = [
-  {
-    id: 1, name: "Chemistry Lab", locations: [
+  { id: 1, name: "Chemistry Lab", locations: [
       { id: 1, name: "First Floor", departments: ["Organic", "Inorganic", "Physical"] },
       { id: 2, name: "Second Floor", departments: ["Analytical", "Biochemistry"] },
-    ]
+    ] 
   },
-  {
-    id: 2, name: "Physics Lab", locations: [
+  { id: 2, name: "Physics Lab", locations: [
       { id: 3, name: "Third Floor", departments: ["Electronics", "Optics"] },
       { id: 4, name: "Fourth Floor", departments: ["Mechanics", "Quantum"] },
-    ]
+    ] 
   },
-  {
-    id: 3, name: "Medical Lab", locations: [
+  { id: 3, name: "Medical Lab", locations: [
       { id: 5, name: "Fifth Floor", departments: ["Pathology", "Microbiology"] },
       { id: 6, name: "Sixth Floor", departments: ["Biochemistry", "Pharmacology"] },
-    ]
+    ] 
   },
-  {
-    id: 4, name: "Computer Lab", locations: [
+  { id: 4, name: "Computer Lab", locations: [
       { id: 7, name: "Ground Floor", departments: ["Networking", "AI", "Security"] },
       { id: 8, name: "First Floor", departments: ["Web Dev", "Database"] },
-    ]
+    ] 
   },
-  {
-    id: 5, name: "Electronics Lab", locations: [
+  { id: 5, name: "Electronics Lab", locations: [
       { id: 9, name: "Second Floor", departments: ["Embedded", "Circuit Design"] },
       { id: 10, name: "Third Floor", departments: ["Signal Processing", "Communication"] },
-    ]
+    ] 
   },
-  {
-    id: 6, name: "Mechanical Lab", locations: [
+  { id: 6, name: "Mechanical Lab", locations: [
       { id: 11, name: "Fourth Floor", departments: ["Thermodynamics", "Fluid Mechanics"] },
       { id: 12, name: "Fifth Floor", departments: ["Robotics", "CAD"] },
-    ]
+    ] 
   },
-  {
-    id: 7, name: "Civil Lab", locations: [
+  { id: 7, name: "Civil Lab", locations: [
       { id: 13, name: "Ground Floor", departments: ["Structural", "Geotechnical"] },
       { id: 14, name: "First Floor", departments: ["Transportation", "Hydraulics"] },
-    ]
+    ] 
   },
-  {
-    id: 8, name: "Biology Lab", locations: [
+  { id: 8, name: "Biology Lab", locations: [
       { id: 15, name: "Second Floor", departments: ["Genetics", "Botany"] },
       { id: 16, name: "Third Floor", departments: ["Zoology", "Microbiology"] },
-    ]
+    ] 
   },
-  {
-    id: 9, name: "Environmental Lab", locations: [
+  { id: 9, name: "Environmental Lab", locations: [
       { id: 17, name: "Fourth Floor", departments: ["Pollution Control", "Waste Management"] },
       { id: 18, name: "Fifth Floor", departments: ["Water Testing", "Soil Analysis"] },
-    ]
+    ] 
   },
-  {
-    id: 10, name: "Food Technology Lab", locations: [
+  { id: 10, name: "Food Technology Lab", locations: [
       { id: 19, name: "Sixth Floor", departments: ["Food Chemistry", "Nutrition"] },
       { id: 20, name: "Seventh Floor", departments: ["Food Microbiology", "Processing"] },
-    ]
+    ] 
   },
 ];
 
 export default function DocumentList() {
   const [docs, setDocs] = useState<any[]>([]);
   const [query, setQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<TabType>("all");
+  const navigate = useNavigate();
+
+  // Load documents based on active tab
+  const refresh = () => {
+    let documents: any[] = readAll();
+
+    if (activeTab === "all") {
+      documents = documents.filter((d) => !d.draft && !d.archived);
+    } else if (activeTab === "draft") {
+      documents = documents.filter((d) => d.draft && !d.archived);
+    } else if (activeTab === "archive") {
+      documents = documents.filter((d) => d.archived);
+    }
+
+    setDocs(documents);
+  };
+
+  useEffect(() => {
+    refresh();
+  }, [activeTab]);
+
   const [showArchived, setShowArchived] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState<string | false>(false);
 
@@ -89,13 +104,14 @@ export default function DocumentList() {
     labs: number[];
     locations: number[];
     departments: string[];
-  }>>({});
+  }
+  >>
+  ({});
 
-  const navigate = useNavigate();
-  const refresh = () => setDocs(listDocuments(showArchived));
+  const refresh2 = () => setDocs(listDocuments(showArchived));
 
   useEffect(() => {
-    refresh();
+    refresh2();
     const savedCounts = localStorage.getItem("docLabCounts");
     if (savedCounts) setDocLabCounts(JSON.parse(savedCounts));
 
@@ -106,14 +122,12 @@ export default function DocumentList() {
   useEffect(() => {
     if (!sidebarOpen) return;
 
-    // restore saved selection if exists
     if (sidebarOpen && docSelections[sidebarOpen]) {
       const sel = docSelections[sidebarOpen];
       setSelectedLabs(sel.labs);
       setSelectedLocations(sel.locations);
       setSelectedDepartments(sel.departments);
     } else {
-      // default all checked
       setSelectedLabs(labsData.map((lab) => lab.id));
       setSelectedLocations(labsData.flatMap((lab) => lab.locations.map((loc) => loc.id)));
       setSelectedDepartments(labsData.flatMap((lab) =>
@@ -189,10 +203,42 @@ export default function DocumentList() {
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">Documents</h2>
-        <button className="btn btn-primary" onClick={() => navigate("/document")}>
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/document")}
+        >
           + New Document
         </button>
       </div>
+
+      {/* Tabs */}
+      <ul className="nav nav-tabs mb-3">
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => setActiveTab("all")}
+            id="all"
+          >
+            All
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "draft" ? "active" : ""}`}
+            onClick={() => setActiveTab("draft")}
+          >
+            Draft
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "archive" ? "active" : ""}`}
+            onClick={() => setActiveTab("archive")}
+          >
+            Archive
+          </button>
+        </li>
+      </ul>
 
       <div className="d-flex align-items-center mb-3 gap-3">
         <input
@@ -202,20 +248,9 @@ export default function DocumentList() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <div className="form-check">
-          <input
-            type="checkbox"
-            id="showArchived"
-            className="form-check-input"
-            checked={showArchived}
-            onChange={(e) => setShowArchived(e.target.checked)}
-          />
-          <label className="form-check-label" htmlFor="showArchived">
-            Show Archived
-          </label>
-        </div>
       </div>
 
+      {/* Table */}
       <div className="table-responsive shadow-sm">
         <table className="table table-bordered align-middle">
           <thead className="table-dark">
@@ -255,16 +290,12 @@ export default function DocumentList() {
                   </span>
                 </td>
                 <td className="d-flex gap-2">
-                 
                   <button
                     className="btn btn-sm btn-warning"
-                    onClick={() => navigate("/document-editor", { state: { documentId: d.id } })}
+                    onClick={() => navigate(`/document-editor/${d.id}`)}
                   >
                     <FaEdit />
                   </button>
-                 
-                 
-
 
                   <button
                     className="btn btn-sm btn-info text-white"
@@ -273,8 +304,9 @@ export default function DocumentList() {
                     <FaEye />
                   </button>
                   <button
-                    className={`btn btn-sm d-flex align-items-center ${d.archived ? "btn-secondary" : "btn-outline-secondary"
-                      }`}
+                    className={`btn btn-sm d-flex align-items-center ${
+                      d.archived ? "btn-secondary" : "btn-outline-secondary"
+                    }`}
                     onClick={() => onArchiveToggle(d.id)}
                   >
                     {d.archived ? <FaBoxOpen className="me-1" /> : <FaArchive className="me-1" />}
@@ -289,6 +321,7 @@ export default function DocumentList() {
         </table>
       </div>
 
+      {/* Sidebar */}
       {sidebarOpen && (
         <div
           className="position-fixed top-0 end-0 bg-white shadow p-3"
@@ -300,6 +333,7 @@ export default function DocumentList() {
           ></button>
           <h5 className="mb-3">Lab Selection</h5>
 
+          {/* Lab Selection Controls */}
           <div className="d-flex gap-4 mb-3">
             <div className="form-check">
               <input
@@ -308,31 +342,19 @@ export default function DocumentList() {
                 id="selectAll"
                 checked={
                   selectedLabs.length === labsData.map((lab) => lab.id).length &&
-                  selectedLocations.length ===
-                  labsData.flatMap((lab) => lab.locations.map((loc) => loc.id)).length &&
-                  selectedDepartments.length ===
-                  labsData.flatMap((lab) =>
-                    lab.locations.flatMap((loc) => loc.departments)
-                  ).length
+                  selectedLocations.length === labsData.flatMap((lab) => lab.locations.map((loc) => loc.id)).length &&
+                  selectedDepartments.length === labsData.flatMap((lab) => lab.locations.flatMap((loc) => loc.departments)).length
                 }
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSelectedLabs(labsData.map((lab) => lab.id));
-                    setSelectedLocations(
-                      labsData.flatMap((lab) => lab.locations.map((loc) => loc.id))
-                    );
-                    setSelectedDepartments(
-                      labsData.flatMap((lab) =>
-                        lab.locations.flatMap((loc) => loc.departments)
-                      )
-                    );
+                    setSelectedLocations(labsData.flatMap((lab) => lab.locations.map((loc) => loc.id)));
+                    setSelectedDepartments(labsData.flatMap((lab) => lab.locations.flatMap((loc) => loc.departments)));
                     (document.getElementById("unselectAll") as HTMLInputElement).checked = false;
                   }
                 }}
               />
-              <label className="form-check-label fw-bold" htmlFor="selectAll">
-                Select All
-              </label>
+              <label className="form-check-label fw-bold" htmlFor="selectAll">Select All</label>
             </div>
 
             <div className="form-check">
@@ -340,11 +362,7 @@ export default function DocumentList() {
                 className="form-check-input"
                 type="checkbox"
                 id="unselectAll"
-                checked={
-                  selectedLabs.length === 0 &&
-                  selectedLocations.length === 0 &&
-                  selectedDepartments.length === 0
-                }
+                checked={selectedLabs.length === 0 && selectedLocations.length === 0 && selectedDepartments.length === 0}
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSelectedLabs([]);
@@ -354,16 +372,15 @@ export default function DocumentList() {
                   }
                 }}
               />
-              <label className="form-check-label fw-bold" htmlFor="unselectAll">
-                Unselect All
-              </label>
+              <label className="form-check-label fw-bold" htmlFor="unselectAll">Unselect All</label>
             </div>
           </div>
 
+          {/* Lab Tree */}
           {labsData.map((lab) => (
             <div key={lab.id} className="mb-2">
               <div className="form-check fw-bold d-flex justify-content-between">
-                <div>
+                <div className="d-flex align-items-center gap-2">
                   <input
                     className="form-check-input"
                     type="checkbox"
