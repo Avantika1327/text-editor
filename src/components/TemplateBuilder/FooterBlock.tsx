@@ -8,7 +8,7 @@ export default function FooterBlock() {
         borderTop: "1px solid #ccc",
       }}
     >
-      {/* Table Section */}
+   
       <table
         style={{
           width: "100%",
@@ -25,27 +25,27 @@ export default function FooterBlock() {
             <td style={{ border: "1px solid #000", padding: "8px", fontWeight: "bold" }}>Document No.</td>
             <td style={{ border: "1px solid #000", padding: "8px" }} contentEditable={true}></td>
             <td style={{ border: "1px solid #000", padding: "8px", fontWeight: "bold" }}>Document Name</td>
-            <td colSpan="3" style={{ border: "1px solid #000", padding: "8px" }} contentEditable={true}></td>
+            <td colSpan={3} style={{ border: "1px solid #000", padding: "8px" }} contentEditable={true}></td>
           </tr>
 
           <tr>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>Prepared By</td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Sign: </td>
           </tr>
 
           <tr>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>Approved By</td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Sign: </td>
           </tr>
 
           <tr>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left", fontWeight: "bold" }}>Issued By</td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
-            <td colSpan="2" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Name: </td>
+            <td colSpan={2} style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Designation: </td>
             <td style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }} contentEditable={true}>Sign: </td>
           </tr>
 

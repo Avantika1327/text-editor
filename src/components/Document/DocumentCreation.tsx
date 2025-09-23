@@ -23,75 +23,36 @@ export default function DocumentCreation() {
   const [departmentId, setDepartmentId] = useState("");
   const [category, setCategory] = useState("SOP");
   const [documentName, setDocumentName] = useState("");
-  const [issuedNo, setIssuedNo] = useState(""); 
-  const [amendmentNo, setAmendmentNo] = useState("");   
-  const [copyNo, setCopyNo] = useState("");     
-  const [headerEnabled, setHeaderEnabled] = useState(true);
-  const [footerEnabled, setFooterEnabled] = useState(true);
+  const [documentNo, setDocumentNo] = useState("");
+  const [issuedNo, setIssuedNo] = useState("");
+  const [amendmentNo, setAmendmentNo] = useState("");
+  const [copyNo, setCopyNo] = useState("");
+
 
   const [availableHeaders, setAvailableHeaders] = useState<TemplateItem[]>([]);
   const [availableFooters, setAvailableFooters] = useState<TemplateItem[]>([]);
   const [selectedHeader, setSelectedHeader] = useState<string | null>(null);
   const [selectedFooter, setSelectedFooter] = useState<string | null>(null);
+  const [headerEnabled, setHeaderEnabled] = useState(true);
+  const [footerEnabled, setFooterEnabled] = useState(true);
 
+ 
   const [dateValue, setDateValue] = useState("");
   const [timeValue, setTimeValue] = useState("");
   const [preparedBy, setPreparedBy] = useState("");
   const [quantityPrepared, setQuantityPrepared] = useState("");
-
-  // ✅ New fields
   const [approvedBy, setApprovedBy] = useState("");
   const [issuedBy, setIssuedBy] = useState("");
   const [issueDate, setIssueDate] = useState("");
   const [amendmentDate, setAmendmentDate] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
 
+  
   useEffect(() => {
     const allTemplates = readLS("grapes_templates_v1") as TemplateItem[];
     setAvailableHeaders(allTemplates.filter(t => t.type === "header"));
     setAvailableFooters(allTemplates.filter(t => t.type === "footer"));
   }, []);
-
-  const handleSave = () => {
-    const payload   = {
-      id: uuidv4(),
-      meta: {
-        labName,
-        labId,
-        location,
-        locationId,
-        department,
-        departmentId,
-        category,
-        documentName,
-        issuedNo,
-        amendmentNo,
-        copyNo,    
-        header: headerEnabled ? selectedHeader : null,
-        footer: footerEnabled ? selectedFooter : null,
-        dateValue,
-        timeValue,
-        preparedBy,
-        quantityPrepared,
-
-        // ✅ New fields in payload
-        approvedBy,
-        issuedBy,
-        issueDate,
-        amendmentDate,
-        effectiveDate,
-      },
-      html: "",
-      css: "",
-      archived: false,
-      draft: true,
-      applyBy: null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    createDocument(payload);
-    navigate("/document-editor", { state: { documentId: payload.id } });
-  };
 
   const getSelectedTemplateHtml = (templateId: string | null) => {
     if (!templateId) return "";
@@ -100,10 +61,55 @@ export default function DocumentCreation() {
     return `<html><head><style>${t.css}</style></head><body>${t.html}</body></html>`;
   };
 
+ 
+  const getFinalHtml = (templateHtml: string) => {
+    let html = templateHtml;
+    const placeholderMapping: Record<string, string> = {
+      labName, labId, location, locationId, department, departmentId,
+      category, documentName, documentNo, issuedNo, amendmentNo, copyNo,
+      dateValue, timeValue, preparedBy, quantityPrepared,
+      approvedBy, issuedBy, issueDate, amendmentDate, effectiveDate
+    };
+    Object.keys(placeholderMapping).forEach(key => {
+      const value = placeholderMapping[key] || "";
+      html = html.replaceAll(`{{${key}}}`, value);
+    });
+    return html;
+  };
+
+
+  const handleSave = () => {
+    const finalHeaderHtml = selectedHeader ? getFinalHtml(getSelectedTemplateHtml(selectedHeader)) : "";
+    const finalFooterHtml = selectedFooter ? getFinalHtml(getSelectedTemplateHtml(selectedFooter)) : "";
+
+    const payload = {
+      id: uuidv4(),
+      meta: {
+        labName, labId, location, locationId, department, departmentId,
+        category, documentName, documentNo, issuedNo, amendmentNo, copyNo,
+        header: headerEnabled ? selectedHeader : null,
+        footer: footerEnabled ? selectedFooter : null,
+        dateValue, timeValue, preparedBy, quantityPrepared,
+        approvedBy, issuedBy, issueDate, amendmentDate, effectiveDate
+      },
+      html: "",
+      css: "",
+      headerHtml: finalHeaderHtml,
+      footerHtml: finalFooterHtml,
+      archived: false,
+      draft: true,
+      applyBy: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    createDocument(payload);
+    navigate("/document-editor", { state: { documentId: payload.id } });
+  };
+
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Create New Document</h2>
-
       <div style={styles.grid}>
         <Input label="Lab Name" value={labName} onChange={setLabName} />
         <Input label="Lab ID" value={labId} onChange={setLabId} />
@@ -122,64 +128,54 @@ export default function DocumentCreation() {
           </select>
         </div>
         <Input label="Document Name" value={documentName} onChange={setDocumentName} />
-        <Input label="Issued No" value={issuedNo} onChange={setIssuedNo} /> 
-        <Input label="Amendment No" value={amendmentNo} onChange={setAmendmentNo} /> 
-        <Input label="Copy No" value={copyNo} onChange={setCopyNo} />    
+        <Input label="Document No" value={documentNo} onChange={setDocumentNo} />
+        <Input label="Issued No" value={issuedNo} onChange={setIssuedNo} />
+        <Input label="Amendment No" value={amendmentNo} onChange={setAmendmentNo} />
+        <Input label="Copy No" value={copyNo} onChange={setCopyNo} />
       </div>
-
-     
       <Card title="Header Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={headerEnabled} onChange={(e) => setHeaderEnabled(e.target.checked)} />
           <span style={{ marginLeft: 8 }}>{headerEnabled ? "Enabled" : "Disabled"}</span>
         </div>
+        {headerEnabled && selectedHeader && (
+          <iframe
+            style={styles.previewIframe}
+            srcDoc={getFinalHtml(getSelectedTemplateHtml(selectedHeader))}
+            title="Header Preview"
+          />
+        )}
         {headerEnabled && (
-          <>
-            <select style={styles.textInput} value={selectedHeader || ""} onChange={(e) => setSelectedHeader(e.target.value)}>
-              <option value="">-- Select Header --</option>
-              {availableHeaders.map(h => <option key={h.id} value={h.id}>{h.name || "Untitled Header"}</option>)}
-            </select>
-            {selectedHeader && (
-              <iframe
-                style={styles.previewIframe}
-                srcDoc={getSelectedTemplateHtml(selectedHeader)}
-                title="Header Preview"
-              />
-            )}
-          </>
+          <select style={styles.textInput} value={selectedHeader || ""} onChange={(e) => setSelectedHeader(e.target.value)}>
+            <option value="">-- Select Header --</option>
+            {availableHeaders.map(h => <option key={h.id} value={h.id}>{h.name || "Untitled Header"}</option>)}
+          </select>
         )}
       </Card>
-
-      {/* Footer Settings */}
       <Card title="Footer Settings">
         <div style={styles.checkboxRow}>
           <input type="checkbox" checked={footerEnabled} onChange={(e) => setFooterEnabled(e.target.checked)} />
           <span style={{ marginLeft: 8 }}>{footerEnabled ? "Enabled" : "Disabled"}</span>
         </div>
+        {footerEnabled && selectedFooter && (
+          <iframe
+            style={styles.previewIframe}
+            srcDoc={getFinalHtml(getSelectedTemplateHtml(selectedFooter))}
+            title="Footer Preview"
+          />
+        )}
         {footerEnabled && (
-          <>
-            <select style={styles.textInput} value={selectedFooter || ""} onChange={(e) => setSelectedFooter(e.target.value)}>
-              <option value="">-- Select Footer --</option>
-              {availableFooters.map(f => <option key={f.id} value={f.id}>{f.name || "Untitled Footer"}</option>)}
-            </select>
-            {selectedFooter && (
-              <iframe
-                style={styles.previewIframe}
-                srcDoc={getSelectedTemplateHtml(selectedFooter)}
-                title="Footer Preview"
-              />
-            )}
-          </>
+          <select style={styles.textInput} value={selectedFooter || ""} onChange={(e) => setSelectedFooter(e.target.value)}>
+            <option value="">-- Select Footer --</option>
+            {availableFooters.map(f => <option key={f.id} value={f.id}>{f.name || "Untitled Footer"}</option>)}
+          </select>
         )}
       </Card>
-
       <div style={styles.grid}>
         <Input label="Date" type="date" value={dateValue} onChange={setDateValue} />
         <Input label="Time" type="time" value={timeValue} onChange={setTimeValue} />
         <Input label="Prepared By" value={preparedBy} onChange={setPreparedBy} />
         <Input label="Quantity Prepared" type="number" value={quantityPrepared} onChange={setQuantityPrepared} />
-
-        {/* ✅ Newly added fields */}
         <Input label="Approved By" value={approvedBy} onChange={setApprovedBy} />
         <Input label="Issued By" value={issuedBy} onChange={setIssuedBy} />
         <Input label="Issue Date" type="date" value={issueDate} onChange={setIssueDate} />

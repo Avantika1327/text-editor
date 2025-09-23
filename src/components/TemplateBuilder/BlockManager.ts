@@ -1,5 +1,165 @@
 export function addCustomBlocks(editor: any) {
   const customBlocks = [
+{
+      id: "custom-header",
+      label: "Header",
+      category: "Custom",
+      content: {
+        type: "default",
+        components: [
+          {
+            tagName: "header",
+            classes: ['custom-header'],
+            stylable: true,
+            components: [
+              {
+                type: "image",
+                attributes: {
+                  src: "https://via.placeholder.com/100",
+                },
+                classes: ['header-logo'],
+                stylable: ['height', 'width'],
+              },
+              {
+                tagName: "div",
+                components: [
+                  {
+                    type: "text",
+                    content: "{{companyName}}",
+                    classes: ['company-name'],
+                    stylable: true,
+                  },
+                  {
+                    tagName: "div",
+                    components: [
+                      {
+                        type: "text",
+                        content: "{{address}}",
+                        classes: ['company-address'],
+                        stylable: true,
+                      },
+                      {
+                        type: "text",
+                        content: "{{email}}",
+                        classes: ['company-email'],
+                        stylable: true,
+                      },
+                      {
+                        type: "text",
+                        content: "{{phone}}",
+                        classes: ['company-phone'],
+                        stylable: true,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+     {
+  "id": "custom-footer",
+  "label": "Footer",
+  "category": "Custom",
+  "content": {
+    "type": "default",
+    "components": [
+      {
+        "tagName": "table",
+        "classes": ["document-info-table"],
+        "stylable": true,
+        "attributes": {
+          "style": "width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;margin-top:20px;table-layout:fixed;text-align:center;"
+        },
+        "components": [
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "colspan": "1", "style": "border:1px solid #000;padding:8px;font-weight:bold;" }, "components": [{ "type": "text", "content": "Document No.", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "1", "style": "border:1px solid #000;padding:8px;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "1", "style": "border:1px solid #000;padding:8px;font-weight:bold;" }, "components": [{ "type": "text", "content": "Document Name", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "3", "style": "border:1px solid #000;padding:8px;font-weight:bold;" }, "components": [{ "type": "text", "content": "", "stylable": true }] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;font-weight:bold;" }, "components": [{ "type": "text", "content": "Prepared By", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Name: ", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Designation: ", "stylable": true}] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Sign: ", "stylable": true, }] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;font-weight:bold;" }, "components": [{ "type": "text", "content": "Approved By", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Name: ", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Designation: ", "stylable": true}] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Sign:", "stylable": true}] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;font-weight:bold;" }, "components": [{ "type": "text", "content": "Issued By", "stylable": true }] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Name: ", "stylable": true}] },
+              { "tagName": "td", "attributes": { "colspan": "2", "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Designation: ", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:8px;text-align:left;" }, "components": [{ "type": "text", "content": "Sign: ", "stylable": true, }] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Issue No.", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Issue Date", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Status", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Amendment No.", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Amendment Date", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Effective Date", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] }
+            ]
+          },
+          {
+            "tagName": "tr",
+            "components": [
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Copy No.", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Copy Location", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "Page No.", "stylable": true }] },
+              { "tagName": "td", "attributes": { "style": "border:1px solid #000;padding:6px;text-align:center;" }, "components": [{ "type": "text", "content": "", "stylable": true }] }
+            ]
+          }
+        ]
+      },
+      {
+        "tagName": "footer",
+        "classes": ["custom-footer"],
+        "stylable": true,
+        "attributes": {
+          "style": "text-align:center;font-size:13px;color:#333;margin-top:20px;padding-top:10px;border-top:1px solid #000;font-family:Arial,sans-serif;"
+        },
+        "components": [
+          { "type": "text", "content": "© {{year}} {{companyName}} Pvt Ltd. All rights reserved.", "stylable": true }
+        ]
+      }
+    ]
+  }
+}  ,
+
     {
       id: "custom-table",
       label: "Table",
@@ -127,6 +287,41 @@ export function addCustomBlocks(editor: any) {
   customBlocks.forEach((block) => editor.BlockManager.add(block.id, block));
 
   editor.CssComposer.addRules([
+        {
+      selectors: ['.custom-header'],
+      style: {
+        display: 'flex',
+        'justify-content': 'space-between',
+        'align-items': 'center',
+        padding: '20px',
+        'border-bottom': '1px solid #ddd',
+      },
+    },
+    {
+      selectors: ['.custom-footer'],
+      style: {
+        'text-align': 'center',
+        padding: '20px',
+        'border-top': '1px solid #ddd',
+      },
+    },
+    {
+      selectors: ['.custom-table'],
+      style: {
+        width: '100%',
+        'border-collapse': 'collapse',
+        'text-align': 'center',
+      },
+    },
+    {
+      selectors: ['.table-cell'],
+      style: {
+        border: '1px solid #000',
+        padding: '8px',
+      },
+    },
+
+
     {
       selectors: ['.custom-button'],
       style: {
@@ -186,7 +381,7 @@ export function addCustomBlocks(editor: any) {
       },
     },
   ]);
-}
+} 
 
 
 export function addDynamicFields(editor: any, docMeta?: any) {
@@ -194,7 +389,7 @@ export function addDynamicFields(editor: any, docMeta?: any) {
     date: "2025-09-12",
     username: [
       "Amit Sharma",
-      "Nikita Nikam",
+      "Nikita Nikam", 
       "Ravi Patil",
       "Sneha Kulkarni",
       "Vishal Jadhav",
@@ -287,18 +482,21 @@ export function addDynamicFields(editor: any, docMeta?: any) {
       "Issued On": "2025-09-12 04:00 PM",
       "Effective On": "2025-09-13 09:00 AM"
     },
-    issuedNo: docMeta?.issuedNo || "N/A",
-    copyNo: docMeta?.copyNo || "N/A",
-    amendmentNo: docMeta?.amendmentNo || "N/A",
-    preparedBy: docMeta?.preparedBy || "N/A",
-    approvedBy: docMeta?.approvedBy || "N/A",
-    issuedBy: docMeta?.issuedBy || "N/A",
-    issueDate: docMeta?.issueDate || "N/A",
-    amendmentDate: docMeta?.amendmentDate || "N/A",
-    effectiveDate: docMeta?.effectiveDate || "N/A"
+   
+    issuedNo: docMeta?.issuedNo || "{{issuedNo}}",
+    copyNo: docMeta?.copyNo || "{{copyNo}}",
+    amendmentNo: docMeta?.amendmentNo || "{{amendmentNo}}",
+    preparedBy: docMeta?.preparedBy || "{{preparedBy}}",
+    approvedBy: docMeta?.approvedBy || "{{approvedBy}}",
+    issuedBy: docMeta?.issuedBy || "{{issuedBy}}",
+    issueDate: docMeta?.issueDate || "{{issueDate}}",
+    amendmentDate: docMeta?.amendmentDate || "{{amendmentDate}}",
+    effectiveDate: docMeta?.effectiveDate || "{{effectiveDate}}",
+    documentNo: docMeta?.documentNo || "{{documentNo}}",
+    documentName: docMeta?.documentName || "{{documentName}}",
   };
 
-  // Simple span fields
+ 
   const simpleFields = [
     "date",
     "issuedNo",
@@ -309,7 +507,9 @@ export function addDynamicFields(editor: any, docMeta?: any) {
     "issuedBy",
     "issueDate",
     "amendmentDate",
-    "effectiveDate"
+    "effectiveDate",
+    "documentNo",
+    "documentName"
   ];
 
   simpleFields.forEach((key) => {
@@ -320,7 +520,7 @@ export function addDynamicFields(editor: any, docMeta?: any) {
     });
   });
 
-  // Selection box fields
+
   const fields = [
     "username",
     "department",

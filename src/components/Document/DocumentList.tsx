@@ -69,8 +69,6 @@ export default function DocumentList() {
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState<TabType>("all");
   const navigate = useNavigate();
-
-  // Load documents based on active tab
   const refresh = () => {
     let documents: any[] = readAll();
 
@@ -332,8 +330,6 @@ export default function DocumentList() {
             onClick={() => setSidebarOpen(false)}
           ></button>
           <h5 className="mb-3">Lab Selection</h5>
-
-          {/* Lab Selection Controls */}
           <div className="d-flex gap-4 mb-3">
             <div className="form-check">
               <input
@@ -375,8 +371,6 @@ export default function DocumentList() {
               <label className="form-check-label fw-bold" htmlFor="unselectAll">Unselect All</label>
             </div>
           </div>
-
-          {/* Lab Tree */}
           {labsData.map((lab) => (
             <div key={lab.id} className="mb-2">
               <div className="form-check fw-bold d-flex justify-content-between">
