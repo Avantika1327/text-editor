@@ -15,7 +15,7 @@ export default function DocumentPreview() {
         <h2 className="text-xl font-semibold">Document</h2>
         <button
           className="mt-4 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/document")}
         >
           ⬅ Back to List
         </button>
@@ -29,7 +29,7 @@ export default function DocumentPreview() {
       <div className="flex items-center justify-between mb-6 border-b pb-3">
       
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/document")}
           className="px-4 py-2 text-sm font-medium bg-gray-700 text-white rounded hover:bg-gray-800"
         >
           ⬅ Back

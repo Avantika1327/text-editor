@@ -1,37 +1,24 @@
-// src/pages/documents/DocumentEditor.tsx
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import GrapesEditor from "../TemplateBuilder/GrapesEditor";
 import Toolbar from "../TemplateBuilder/Toolbar";
 import { getTemplate } from "../../utils/templateStorage";
 import { getDocument, updateDocument } from "../../utils/documentStorage";
 
 export default function DocumentEditor() {
-  const { id } = useParams<{ id: string }>(); // id is string | undefined
-  const navigate = useNavigate();
-
   const [editor, setEditor] = useState<any>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [applyByChecked, setApplyByChecked] = useState(false);
   const [applyDate, setApplyDate] = useState("");
+  const location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
 
-  const metaDoc = id ? getDocument(id) : null;
-  const isEditing = !!metaDoc; // true if editing an existing document
-
-  // Redirect if id is missing
-  useEffect(() => {
-    if (!id) navigate("/document-list");
-  }, [id, navigate]);
+  const docId = location.state?.documentId || params.id;
 
   useEffect(() => {
-    if (!editor || !id || !metaDoc) return;
-
-    // Pre-fill applyBy only if it exists in saved doc
-    if (metaDoc.applyBy) {
-      setApplyByChecked(true);
-      setApplyDate(metaDoc.applyBy);
-    }
-
+    const metaDoc = getDocument(docId);
+    if (!metaDoc || !editor) return;
     const meta = metaDoc.meta;
 
     const lockComponent = (cmp: any) => {
@@ -57,7 +44,6 @@ export default function DocumentEditor() {
         lockComponent(headerComp);
       }
     }
-
     if (meta.footer) {
       const footerTpl = getTemplate(meta.footer);
       if (footerTpl) {
@@ -76,27 +62,17 @@ export default function DocumentEditor() {
       editor.setComponents(metaDoc.html);
       editor.setStyle(metaDoc.css);
     }
-  }, [editor, id, metaDoc]);
+  }, [editor, docId]);
 
-  const handleSaveClick = () => {
-    if (isEditing) {
-      // If editing existing document, save directly
-      handleConfirmSave();
-    } else {
-      // If new document, show Apply By alert
-      setShowAlert(true);
-    }
-  };
+  const handleSaveClick = () => setShowAlert(true);
 
   const handleConfirmSave = () => {
-    if (!editor || !id) return;
-
-    updateDocument(id, {
+    if (!editor || !docId) return;
+    updateDocument(docId, {
       html: editor.getHtml(),
       css: editor.getCss(),
       applyBy: applyByChecked ? applyDate : null,
     });
-
     setShowAlert(false);
     alert("Document Saved!");
     navigate("/document-list");
@@ -104,34 +80,16 @@ export default function DocumentEditor() {
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-      <div
-        id="blocks"
-        style={{
-          width: "250px",
-          background: "#f7f7f7",
-          padding: "10px",
-          overflowY: "auto",
-        }}
-      />
-      <GrapesEditor onInit={setEditor} docData={metaDoc?.meta} />
+      <div id="blocks" style={{ width: "250px", background: "#f7f7f7", padding: "10px", overflowY: "auto" }} />
+      <GrapesEditor onInit={setEditor} docData={getDocument(docId)?.meta} />
       <Toolbar onSave={handleSaveClick} />
 
-      {!isEditing && showAlert && (
-        <div
-          style={{
-            position: "fixed",
-            top: "30%",
-            left: "50%",
-            transform: "translate(-50%, -30%)",
-            background: "#fff",
-            border: "1px solid #ccc",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
-            zIndex: 9999,
-            minWidth: "300px",
-          }}
-        >
+      {showAlert && (
+        <div style={{
+          position: "fixed", top: "30%", left: "50%", transform: "translate(-50%, -30%)",
+          background: "#fff", border: "1px solid #ccc", padding: "20px", borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.2)", zIndex: 9999, minWidth: "300px"
+        }}>
           <h3>Save Document</h3>
           <div style={{ margin: "10px 0" }}>
             <label>
@@ -145,20 +103,11 @@ export default function DocumentEditor() {
           </div>
           {applyByChecked && (
             <div style={{ marginBottom: "10px" }}>
-              <input
-                type="date"
-                value={applyDate}
-                onChange={(e) => setApplyDate(e.target.value)}
-              />
+              <input type="date" value={applyDate} onChange={(e) => setApplyDate(e.target.value)} />
             </div>
           )}
           <div style={{ textAlign: "right" }}>
-            <button
-              onClick={() => setShowAlert(false)}
-              style={{ marginRight: 10 }}
-            >
-              Cancel
-            </button>
+            <button onClick={() => setShowAlert(false)} style={{ marginRight: 10 }}> Cancel </button>
             <button onClick={handleConfirmSave}>Save</button>
           </div>
         </div>

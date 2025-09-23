@@ -292,7 +292,7 @@ export default function DocumentList() {
                 <td className="d-flex gap-2">
                   <button
                     className="btn btn-sm btn-warning"
-                    onClick={() => navigate(`/document-editor/${d.id}`)}
+                    onClick={() =>  navigate("/document-editor", { state: { documentId: d.id } })}
                   >
                     <FaEdit />
                   </button>
