@@ -39,6 +39,13 @@ export default function DocumentCreation() {
   const [preparedBy, setPreparedBy] = useState("");
   const [quantityPrepared, setQuantityPrepared] = useState("");
 
+  // ✅ New fields
+  const [approvedBy, setApprovedBy] = useState("");
+  const [issuedBy, setIssuedBy] = useState("");
+  const [issueDate, setIssueDate] = useState("");
+  const [amendmentDate, setAmendmentDate] = useState("");
+  const [effectiveDate, setEffectiveDate] = useState("");
+
   useEffect(() => {
     const allTemplates = readLS("grapes_templates_v1") as TemplateItem[];
     setAvailableHeaders(allTemplates.filter(t => t.type === "header"));
@@ -66,6 +73,13 @@ export default function DocumentCreation() {
         timeValue,
         preparedBy,
         quantityPrepared,
+
+        // ✅ New fields in payload
+        approvedBy,
+        issuedBy,
+        issueDate,
+        amendmentDate,
+        effectiveDate,
       },
       html: "",
       css: "",
@@ -160,6 +174,13 @@ export default function DocumentCreation() {
         <Input label="Time" type="time" value={timeValue} onChange={setTimeValue} />
         <Input label="Prepared By" value={preparedBy} onChange={setPreparedBy} />
         <Input label="Quantity Prepared" type="number" value={quantityPrepared} onChange={setQuantityPrepared} />
+
+        {/* ✅ Newly added fields */}
+        <Input label="Approved By" value={approvedBy} onChange={setApprovedBy} />
+        <Input label="Issued By" value={issuedBy} onChange={setIssuedBy} />
+        <Input label="Issue Date" type="date" value={issueDate} onChange={setIssueDate} />
+        <Input label="Amendment Date" type="date" value={amendmentDate} onChange={setAmendmentDate} />
+        <Input label="Effective Date" type="date" value={effectiveDate} onChange={setEffectiveDate} />
       </div>
 
       <button onClick={handleSave} style={styles.saveButton}> Save Document</button>

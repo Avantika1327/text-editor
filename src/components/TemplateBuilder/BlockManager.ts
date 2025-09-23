@@ -1,87 +1,6 @@
 export function addCustomBlocks(editor: any) {
   const customBlocks = [
     {
-      id: "custom-header",
-      label: "Header",
-      category: "Custom",
-      content: {
-        type: "default",
-        components: [
-          {
-            tagName: "header",
-            classes: ['custom-header'],
-            stylable: true,
-            components: [
-              {
-                type: "image",
-                attributes: {
-                  src: "https://via.placeholder.com/100",
-                },
-                classes: ['header-logo'],
-                stylable: ['height', 'width'],
-              },
-              {
-                tagName: "div",
-                components: [
-                  {
-                    type: "text",
-                    content: "{{companyName}}",
-                    classes: ['company-name'],
-                    stylable: true,
-                  },
-                  {
-                    tagName: "div",
-                    components: [
-                      {
-                        type: "text",
-                        content: "{{address}}",
-                        classes: ['company-address'],
-                        stylable: true,
-                      },
-                      {
-                        type: "text",
-                        content: "{{email}}",
-                        classes: ['company-email'],
-                        stylable: true,
-                      },
-                      {
-                        type: "text",
-                        content: "{{phone}}",
-                        classes: ['company-phone'],
-                        stylable: true,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      id: "custom-footer",
-      label: "Footer",
-      category: "Custom",
-      content: {
-        type: "default",
-        components: [
-          {
-            tagName: "footer",
-            classes: ['custom-footer'],
-            stylable: true,
-            components: [
-              {
-                type: "text",
-                content: "© {{year}} {{companyName}} Pvt Ltd. All rights reserved.",
-                stylable: true,
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
       id: "custom-table",
       label: "Table",
       category: "Custom",
@@ -134,8 +53,7 @@ export function addCustomBlocks(editor: any) {
           },
         ],
       },
-    }
-    ,
+    },
     {
       id: "text-block",
       label: "Text",
@@ -210,39 +128,6 @@ export function addCustomBlocks(editor: any) {
 
   editor.CssComposer.addRules([
     {
-      selectors: ['.custom-header'],
-      style: {
-        display: 'flex',
-        'justify-content': 'space-between',
-        'align-items': 'center',
-        padding: '20px',
-        'border-bottom': '1px solid #ddd',
-      },
-    },
-    {
-      selectors: ['.custom-footer'],
-      style: {
-        'text-align': 'center',
-        padding: '20px',
-        'border-top': '1px solid #ddd',
-      },
-    },
-    {
-      selectors: ['.custom-table'],
-      style: {
-        width: '100%',
-        'border-collapse': 'collapse',
-        'text-align': 'center',
-      },
-    },
-    {
-      selectors: ['.table-cell'],
-      style: {
-        border: '1px solid #000',
-        padding: '8px',
-      },
-    },
-    {
       selectors: ['.custom-button'],
       style: {
         padding: '10px 20px',
@@ -269,7 +154,6 @@ export function addCustomBlocks(editor: any) {
         'min-height': '50px',
       },
     },
-
     {
       selectors: [".solution-table"],
       style: {
@@ -403,33 +287,40 @@ export function addDynamicFields(editor: any, docMeta?: any) {
       "Issued On": "2025-09-12 04:00 PM",
       "Effective On": "2025-09-13 09:00 AM"
     },
-        issuedNo: docMeta?.issuedNo || "N/A",
+    issuedNo: docMeta?.issuedNo || "N/A",
     copyNo: docMeta?.copyNo || "N/A",
     amendmentNo: docMeta?.amendmentNo || "N/A",
+    preparedBy: docMeta?.preparedBy || "N/A",
+    approvedBy: docMeta?.approvedBy || "N/A",
+    issuedBy: docMeta?.issuedBy || "N/A",
+    issueDate: docMeta?.issueDate || "N/A",
+    amendmentDate: docMeta?.amendmentDate || "N/A",
+    effectiveDate: docMeta?.effectiveDate || "N/A"
   };
 
+  // Simple span fields
+  const simpleFields = [
+    "date",
+    "issuedNo",
+    "copyNo",
+    "amendmentNo",
+    "preparedBy",
+    "approvedBy",
+    "issuedBy",
+    "issueDate",
+    "amendmentDate",
+    "effectiveDate"
+  ];
 
-   
-  editor.BlockManager.add("field-issuedNo", {
-    label: "Issued No",
-    category: "Dynamic Fields",
-    content: `<span class="dynamic-field" data-field="issuedNo">${dynamicData.issuedNo}</span>`,
+  simpleFields.forEach((key) => {
+    editor.BlockManager.add(`field-${key}`, {
+      label: key.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase()),
+      category: "Dynamic Fields",
+      content: `<span class="dynamic-field" data-field="${key}">${(dynamicData as any)[key]}</span>`,
+    });
   });
 
-  
-  editor.BlockManager.add("field-copyNo", {
-    label: "Copy No",
-    category: "Dynamic Fields",
-    content: `<span class="dynamic-field" data-field="copyNo">${dynamicData.copyNo}</span>`,
-  });
-
-  
-  editor.BlockManager.add("field-amendmentNo", {
-    label: "Amendment No",
-    category: "Dynamic Fields",
-    content: `<span class="dynamic-field" data-field="amendmentNo">${dynamicData.amendmentNo}</span>`,
-  });
-
+  // Selection box fields
   const fields = [
     "username",
     "department",
@@ -440,16 +331,14 @@ export function addDynamicFields(editor: any, docMeta?: any) {
     "signatoryBy",
     "signatoryOn"
   ] as const;
-  type FieldKey = typeof fields[number];
 
   fields.forEach((fieldKey) => {
     let values: any[] = [];
 
-   
     if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
       values = Object.entries(dynamicData[fieldKey]).map(([key, val]) => ({ key, value: val }));
     } else {
-      values = dynamicData[fieldKey as FieldKey] as any[];
+      values = dynamicData[fieldKey] as any[];
     }
 
     editor.BlockManager.add(`field-${fieldKey}`, {
@@ -459,28 +348,23 @@ export function addDynamicFields(editor: any, docMeta?: any) {
         <select onchange="window.handleDynamicSelect(this)">
           <option value="">Select ${fieldKey}</option>
           ${values
-          .map((val: any) => {
-            if (fieldKey === "userDetails") {
-              return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
-            }
-            if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
-              return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
-            }
-            return `<option value="${val}">${val}</option>`;
-          })
-          .join("")}
+            .map((val: any) => {
+              if (fieldKey === "userDetails") {
+                return `<option value='${JSON.stringify(val)}'>${val.email}</option>`;
+              }
+              if (fieldKey === "signatoryBy" || fieldKey === "signatoryOn") {
+                return `<option value="${val.value}">${val.key} - ${val.value}</option>`;
+              }
+              return `<option value="${val}">${val}</option>`;
+            })
+            .join("")}
         </select>
         <div class="selected-value" style="margin-top:4px;"></div>
       </div>`,
     });
   });
-
-  editor.BlockManager.add("field-date", {
-    label: "Date",
-    category: "Dynamic Fields",
-    content: `<span class="dynamic-date">${dynamicData.date}</span>`,
-  });
 }
+
 
 (window as any).handleDynamicSelect = function (selectEl: HTMLSelectElement) {
   const container = selectEl.nextElementSibling as HTMLElement;
@@ -502,3 +386,4 @@ export function addDynamicFields(editor: any, docMeta?: any) {
     container.innerHTML = `<span>${rawValue}</span>`;
   }
 };
+
