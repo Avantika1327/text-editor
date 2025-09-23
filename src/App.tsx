@@ -6,6 +6,7 @@ import DocumentCreation from "./components/Document/DocumentCreation";
 import DocumentEditor from "./components/Document/DocumentEditor";
 import DocumentList from "./components/Document/DocumentList";
 import DocumentPreview from "./components/Document/DocumentPreview";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (
