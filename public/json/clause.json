@@ -1,0 +1,422 @@
+[
+    {
+        "title": "Foreword",
+        "note": "ISO (the International Organization for Standardization) is a",
+        "fields": [
+            {
+                "field": "pqc",
+                "category": "Manual"
+            },
+            {
+                "field": "pqc",
+                "category": "QSP"
+            }
+        ]
+    },
+    {
+        "title": "Introduction",
+
+        "note": " The objective of this document is to promote the welfare ",
+        "fields": [
+            {
+                "field": "pqc",
+                "category": "xyz"
+            },
+            {
+                "field": "pqc",
+                "category": "xyz"
+            }
+        ],
+        "children": [
+            {
+                "title": "1 Scope",
+                "note": "The objective of this document is to promote the welfare",
+                "fields": [
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    },
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    }
+                ]
+            },
+            {
+                "title": "2 Normative references",
+                "note": "The objective of this document is to promote the welfare",
+                "fields": [
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    },
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    }
+                ]
+            },
+            {
+                "title": "3 Terms and definitions",
+
+
+                "note": "The objective of this document is to promote the welfare",
+                "fields": [
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    },
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    }
+                ]
+            },
+            {
+                "title": "4 General requirements",
+
+                "note": "The objective of this document is to promote the welfare",
+                "fields": [
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    },
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    }
+                ],
+
+                "children": [
+                    {
+                        "title": "4.1 Impartiality",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "4.2 Confidentiality",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "title": "4.2.1 Management of information",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "4.2.2 Release of information",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "4.2.3 Personnel responsibility",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "4.3 Requirements regarding patients",
+
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "5 Structural and governance requirements",
+
+                "note": "The objective of this document is to promote the welfare",
+                "fields": [
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    },
+                    {
+                        "field": "pqc",
+                        "category": "xyz"
+                    }
+                ],
+                "children": [
+                    {
+                        "title": "5.1 Legal entity",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "5.2 Laboratory director",
+
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "title": "5.2.1 Laboratory director competence",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "5.2.2 Laboratory director responsibilities",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "5.2.3 Delegation of duties",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "5.3 Laboratory activities",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "title": "5.3.1 General",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "5.3.2 Conformance with requirements",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "5.3.3 Advisory activities",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "5.4 Structure and authority",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "title": "5.4.1 General",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "5.4.2 Quality management",
+
+                                "note": "The objective of this document is to promote the welfare",
+                                "fields": [
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    },
+                                    {
+                                        "field": "pqc",
+                                        "category": "xyz"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "5.5 Objectives and policies",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "5.6 Risk management",
+
+                        "note": "The objective of this document is to promote the welfare",
+                        "fields": [
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            },
+                            {
+                                "field": "pqc",
+                                "category": "xyz"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
