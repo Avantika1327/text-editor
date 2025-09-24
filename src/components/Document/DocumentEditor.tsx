@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import GrapesEditor from "../TemplateBuilder/GrapesEditor";
-import Toolbar from "../TemplateBuilder/Toolbar";
+import DocumentToolbar from "./DocumentToolbar";
 import { getTemplate } from "../../utils/templateStorage";
 import { getDocument, updateDocument } from "../../utils/documentStorage";
 
 export default function DocumentEditor() {
   const [editor, setEditor] = useState<any>(null);
-  const [showAlert, setShowAlert] = useState(false);
   const [applyByChecked, setApplyByChecked] = useState(false);
   const [applyDate, setApplyDate] = useState("");
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
-
   const docId = location.state?.documentId || params.id;
    const replacePlaceholders = (html: string, meta: any) => {
   if (!html) return "";
@@ -89,22 +87,6 @@ export default function DocumentEditor() {
 }, [editor, docId]);
 
 
-  const handleSaveClick = () => setShowAlert(true);
-
-  const handleConfirmSave = () => {
-    if (!editor || !docId) return;
-
-    updateDocument(docId, {
-      html: editor.getHtml(),
-      css: editor.getCss(),
-      applyBy: applyByChecked ? applyDate : null,
-    });
-
-    setShowAlert(false);
-    alert("Document Saved!");
-    navigate("/document-list");
-  };
-
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
       <div
@@ -116,53 +98,62 @@ export default function DocumentEditor() {
           overflowY: "auto",
         }}
       />
-      <GrapesEditor onInit={setEditor} docData={getDocument(docId)?.meta} />
-      <Toolbar onSave={handleSaveClick} />
 
-      {showAlert && (
-        <div
-          style={{
-            position: "fixed",
-            top: "30%",
-            left: "50%",
-            transform: "translate(-50%, -30%)",
-            background: "#fff",
-            border: "1px solid #ccc",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.2)",
-            zIndex: 9999,
-            minWidth: "300px",
-          }}
-        >
-          <h3>Save Document</h3>
-          <div style={{ margin: "10px 0" }}>
-            <label>
-              <input
-                type="checkbox"
-                checked={applyByChecked}
-                onChange={(e) => setApplyByChecked(e.target.checked)}
-              />{" "}
-              Apply By
-            </label>
-          </div>
-          {applyByChecked && (
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="date"
-                value={applyDate}
-                onChange={(e) => setApplyDate(e.target.value)}
-              />
-            </div>
-          )}
-          <div style={{ textAlign: "right" }}>
-            <button onClick={() => setShowAlert(false)} style={{ marginRight: 10 }}>
-              Cancel
-            </button>
-            <button onClick={handleConfirmSave}>Save</button>
-          </div>
-        </div>
-      )}
+      <GrapesEditor onInit={setEditor} docData={getDocument(docId)?.meta} />
+
+      <DocumentToolbar
+        onSave={(type) => {
+          if (!editor || !docId) return;
+
+          if (applyByChecked && (!applyDate || applyDate.trim() === "")) {
+            alert("⚠️ Please select a valid 'Apply By' date before saving!");
+            return;
+          }
+
+          const isDraft = type === "draft";
+
+          updateDocument(docId, {
+            html: editor.getHtml(),
+            css: editor.getCss(),
+            applyBy: applyByChecked ? applyDate : null,
+            draft: isDraft,
+            archived: type === "archive",
+          });
+
+          alert("✅ Document Saved!");
+          navigate("/document-list");
+        }}
+      />
+
+      {/* Apply By Date */}
+      <div
+        style={{
+          position: "fixed",
+          top: 100,
+          right: 20,
+          background: "#fff",
+          padding: "10px",
+          borderRadius: 8,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+          zIndex: 999,
+        }}
+      >
+        <label>
+          <input
+            type="checkbox"
+            checked={applyByChecked}
+            onChange={(e) => setApplyByChecked(e.target.checked)}
+          />{" "}
+          Apply By
+        </label>
+        {applyByChecked && (
+          <input
+            type="date"
+            value={applyDate}
+            onChange={(e) => setApplyDate(e.target.value)}
+          />
+        )}
+      </div>
     </div>
   );
 }

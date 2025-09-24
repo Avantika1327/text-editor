@@ -9,8 +9,8 @@ export interface DocumentItem {
   createdAt: string;
   updatedAt: string;
   applyBy?: string | null;
+  type?: "normal" | "draft" | "archive"; // <-- add this
 
-  
 }
 
 const KEY = "documents_v1";
